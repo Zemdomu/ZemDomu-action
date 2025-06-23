@@ -7,7 +7,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf dist",
+    "build:tsc": "tsc",
+    "build:ncc": "ncc build src/index.ts --license licenses.txt -o dist",
+    "build": "npm run clean && npm run build:ncc",
     "prepare": "npm run build"
   },
   "dependencies": {
@@ -18,6 +21,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.17",
+    "@vercel/ncc": "^0.38.3",
+    "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   }
 }
