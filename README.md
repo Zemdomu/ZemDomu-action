@@ -2,8 +2,20 @@
 
 This package provides a GitHub Action that runs the ZemDomu linter on your project.
 
-```
-- uses: Zelcus/zemdomu-action@v1
+## Usage
+
+Add the action to a workflow in your repository:
+
+```yaml
+- uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
+  with:
+    files: "**/*.{html,jsx,tsx}"
 ```
 
-The action uses the `zemdomu` npm package from [ZemDomu-Core](../ZemDomu-Core).
+For local development inside this monorepo you can reference the action by path:
+
+```yaml
+- uses: ./packages/Zemdomu-Actions
+```
+
+The action uses the `zemdomu` npm package from [ZemDomu](https://www.npmjs.com/package/zemdomu).
