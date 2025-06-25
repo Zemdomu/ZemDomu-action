@@ -40,6 +40,20 @@ async function run(): Promise<void> {
     const cross = crossInput ? /^(true|1)$/i.test(crossInput) : false;
     const warnInput = core.getInput("warningOnly");
     const warnOnly = warnInput ? /^(true|1)$/i.test(warnInput) : false;
+    const configPath = core.getInput("configPath") || ".zemdomurc.json";
+
+    let config: Record<string, "off" | "warning" | "error"> = {};
+    try {
+      const raw = await fs.readFile(configPath, "utf8");
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object" && parsed.rules && typeof parsed.rules === "object") {
+        config = parsed.rules;
+      }
+    } catch (err: any) {
+      if (err.code !== "ENOENT") {
+        core.warning(`Failed to read config file ${configPath}: ${(err as Error).message}`);
+      }
+    }
 
     // Determine file list (literal vs glob)
     const files = new Set<string>();
@@ -67,7 +81,10 @@ async function run(): Promise<void> {
 
     for (const [file, issues] of results.entries()) {
       for (const issue of issues as LintIssue[]) {
-        const sev = core.getInput(issue.rule) as 'off' | 'warning' | 'error';
+        let sev = config[issue.rule] as 'off' | 'warning' | 'error' | undefined;
+        if (!sev) {
+          sev = issue.severity;
+        }
         if (sev === 'off') {
           continue;
         }
