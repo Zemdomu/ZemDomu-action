@@ -31,7 +31,14 @@ jobs:
         with:
           node-version: "20"
 
-      # ─── Test harness ────────────────────────────────────────────
+      # ─── Install & build your action first ───────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build ZemDomu action
+        run: npm run build
+
+      # ─── Test harness (after build) ──────────────────────────────
       - name: Create failing test file
         run: |
           cat << 'EOF' > lint-test.html
@@ -43,19 +50,12 @@ jobs:
           EOF
 
       - name: Run ZemDomu against test file
-        uses: ./ # your action
-        with:
-          files: "lint-test.html"
-          crossComponentAnalysis: "false"
-      # ─────────────────────────────────────────────────────────────
-
-      - name: Install & build linter
         run: |
-          npm ci
-          npm run build
+          node dist/index.js --files lint-test.html --crossComponentAnalysis=false
 
+      # ─── Actual semantic lint job ────────────────────────────────
       - name: Run ZemDomu semantic linter
-        uses: ./ # Points to action.yml in repo root
+        uses: ./ # points to action.yml in repo root
         with:
           files: "**/*.{html,jsx,tsx}"
           crossComponentAnalysis: "true"
