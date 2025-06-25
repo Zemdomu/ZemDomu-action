@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build:tsc": "tsc",
     "build:ncc": "ncc build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
@@ -23,7 +23,6 @@
   "devDependencies": {
     "@types/node": "^22.15.17",
     "@vercel/ncc": "^0.38.3",
-    "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   }
 }
