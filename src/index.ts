@@ -1,6 +1,19 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
 import { ProjectLinter } from "zemdomu";
+import { promises as fs } from "fs";
+
+class FixedProjectLinter extends ProjectLinter {
+  async lintFile(filePath: string, content?: string) {
+    if (!content) {
+      content = await fs.readFile(filePath, "utf8");
+    }
+    if (filePath.endsWith(".html")) {
+      content = content.replace(/<!DOCTYPE[^>]*>/i, "");
+    }
+    return super.lintFile(filePath, content);
+  }
+}
 
 function parseCliArgs(): void {
   const args = process.argv.slice(2);
@@ -39,7 +52,7 @@ async function run(): Promise<void> {
     }
 
     // Run the linter
-    const linter = new ProjectLinter({ crossComponentAnalysis: cross });
+    const linter = new FixedProjectLinter({ crossComponentAnalysis: cross });
     const results = await linter.lintFiles(Array.from(files));
 
     // Report issues with annotations
