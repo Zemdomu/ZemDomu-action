@@ -6,10 +6,13 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build:tsc": "tsc",
-    "build:ncc": "npx @vercel/ncc build src/index.ts --license licenses.txt -o dist",
+    "build:ncc": "node node_modules/@vercel/ncc/dist/ncc/cli.js build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
     "test:lint": "node dist/index.js --files lint-test.html"
   },
