@@ -25,91 +25,10 @@ on:
         description: 'Emit warnings instead of errors'
         required: false
         default: 'false'
-      singleH1:
-        description: 'Severity for singleH1'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      enforceHeadingOrder:
-        description: 'Severity for enforceHeadingOrder'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      enforceListNesting:
-        description: 'Severity for enforceListNesting'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      noTabindexGreaterThanZero:
-        description: 'Severity for noTabindexGreaterThanZero'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      preventEmptyInlineTags:
-        description: 'Severity for preventEmptyInlineTags'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireAltText:
-        description: 'Severity for requireAltText'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireButtonText:
-        description: 'Severity for requireButtonText'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireHrefOnAnchors:
-        description: 'Severity for requireHrefOnAnchors'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireHtmlLang:
-        description: 'Severity for requireHtmlLang'
-        type: choice
-        default: warning
-        options: [off, warning, error]
-      requireIframeTitle:
-        description: 'Severity for requireIframeTitle'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireImageInputAlt:
-        description: 'Severity for requireImageInputAlt'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireLabelForFormControls:
-        description: 'Severity for requireLabelForFormControls'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireLinkText:
-        description: 'Severity for requireLinkText'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireNavLinks:
-        description: 'Severity for requireNavLinks'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireSectionHeading:
-        description: 'Severity for requireSectionHeading'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      requireTableCaption:
-        description: 'Severity for requireTableCaption'
-        type: choice
-        default: error
-        options: [off, warning, error]
-      uniqueIds:
-        description: 'Severity for uniqueIds'
-        type: choice
-        default: error
-        options: [off, warning, error]
+      configPath:
+        description: "Path to JSON config file defining rule severities"
+        required: false
+        default: ".zemdomurc.json"
 
 jobs:
   lint:
@@ -145,20 +64,4 @@ jobs:
           files: "**/*.{html,jsx,tsx}"
           crossComponentAnalysis: ${{ inputs.crossComponentAnalysis }}
           warningOnly: ${{ inputs.warningOnly }}
-          singleH1: ${{ inputs.singleH1 }}
-          enforceHeadingOrder: ${{ inputs.enforceHeadingOrder }}
-          enforceListNesting: ${{ inputs.enforceListNesting }}
-          noTabindexGreaterThanZero: ${{ inputs.noTabindexGreaterThanZero }}
-          preventEmptyInlineTags: ${{ inputs.preventEmptyInlineTags }}
-          requireAltText: ${{ inputs.requireAltText }}
-          requireButtonText: ${{ inputs.requireButtonText }}
-          requireHrefOnAnchors: ${{ inputs.requireHrefOnAnchors }}
-          requireHtmlLang: ${{ inputs.requireHtmlLang }}
-          requireIframeTitle: ${{ inputs.requireIframeTitle }}
-          requireImageInputAlt: ${{ inputs.requireImageInputAlt }}
-          requireLabelForFormControls: ${{ inputs.requireLabelForFormControls }}
-          requireLinkText: ${{ inputs.requireLinkText }}
-          requireNavLinks: ${{ inputs.requireNavLinks }}
-          requireSectionHeading: ${{ inputs.requireSectionHeading }}
-          requireTableCaption: ${{ inputs.requireTableCaption }}
-          uniqueIds: ${{ inputs.uniqueIds }}
+          configPath: ${{ inputs.configPath }}
