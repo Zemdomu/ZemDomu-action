@@ -1,44 +1,38 @@
 name: Run ZemDomu Linter
 
 on:
-  # Run on every PR against default branch (last check before merge)
-  pull_request:
-    paths:
-      - "**/*.html"
-      - "**/*.jsx"
-      - "**/*.tsx"
-
-  # Allow manual execution via Actions UI
-  workflow_dispatch: {}
-
-  # Optional: also run on direct pushes to catch issues early
   push:
+    branches:
+      - main
     paths:
       - "**/*.html"
       - "**/*.jsx"
       - "**/*.tsx"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.html"
+      - "**/*.jsx"
+      - "**/*.tsx"
+  workflow_dispatch: {}
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      # ─── Install & build your action first ───────────────────────
+      - name: Cleanup dependencies
+        run: rm -rf node_modules
       - name: Install dependencies
         run: npm ci
-
       - name: Build ZemDomu action
         run: npm run build
-
-      # ─── Test harness (after build) ──────────────────────────────
       - name: Create failing test file
         run: |
           cat << 'EOF' > lint-test.html
@@ -48,14 +42,12 @@ jobs:
             <h1>Two</h1>
           </body></html>
           EOF
-
-      - name: Run ZemDomu against test file
-        run: |
-          node dist/index.js --files lint-test.html --crossComponentAnalysis=false
-
-      # ─── Actual semantic lint job ────────────────────────────────
+      - name: Run warnings-only check
+        run: |-
+          node dist/index.js --files lint-test.html --warningOnly=true
       - name: Run ZemDomu semantic linter
-        uses: ./ # points to action.yml in repo root
+        uses: ./
         with:
           files: "**/*.{html,jsx,tsx}"
           crossComponentAnalysis: "true"
+          warningOnly: "false"

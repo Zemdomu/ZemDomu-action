@@ -41,15 +41,19 @@ async function run(): Promise<void> {
     const warnInput = core.getInput("warningOnly");
     const warnOnly = warnInput ? /^(true|1)$/i.test(warnInput) : false;
 
-    // Expand glob patterns
+    // Determine file list (literal vs glob)
     const files = new Set<string>();
-    for (const pattern of patterns) {
-      const matches = await glob(pattern, {
-        nodir: true,
-        ignore: ["**/node_modules/**", "**/dist/**", "**/.github/**"],
-      });
-      for (const m of matches) {
-        files.add(m);
+    if (patterns.every(p => !/[*?\[]/.test(p))) {
+      // literal paths only
+      for (const p of patterns) files.add(p);
+    } else {
+      // expand glob patterns
+      for (const pattern of patterns) {
+        const matches = await glob(pattern, {
+          nodir: true,
+          ignore: ["**/node_modules/**", "**/dist/**", "**/.github/**"],
+        });
+        for (const m of matches) files.add(m);
       }
     }
 
@@ -57,15 +61,13 @@ async function run(): Promise<void> {
     const linter = new FixedProjectLinter({ crossComponentAnalysis: cross });
     const results = await linter.lintFiles(Array.from(files));
 
-    // Report issues with annotations
-    let foundErrors = false;
+    // Report issues
+    let found = false;
     for (const [file, issues] of results.entries()) {
-      if (issues.length > 0) {
-        foundErrors = true;
-      }
+      if (issues.length > 0) found = true;
       for (const issue of issues) {
-        const log = warnOnly ? core.warning : core.error;
-        log(`${issue.message} (${issue.rule})`, {
+        const logger = warnOnly ? core.warning : core.error;
+        logger(`${issue.message} (${issue.rule})`, {
           file,
           startLine: issue.line + 1,
           startColumn: issue.column != null ? issue.column + 1 : undefined,
@@ -73,8 +75,8 @@ async function run(): Promise<void> {
       }
     }
 
-    // If any issues were found, provide a summary
-    if (foundErrors) {
+    // Summary and possible failure
+    if (found) {
       core.info(`\nSemantic lint ${warnOnly ? "warnings" : "errors"} summary:`);
       for (const [file, issues] of results.entries()) {
         if (issues.length > 0) {
@@ -86,9 +88,7 @@ async function run(): Promise<void> {
           }
         }
       }
-      if (!warnOnly) {
-        core.setFailed("Semantic lint errors found");
-      }
+      if (!warnOnly) core.setFailed("Semantic lint errors found");
     }
   } catch (err) {
     core.setFailed((err as Error).message);
