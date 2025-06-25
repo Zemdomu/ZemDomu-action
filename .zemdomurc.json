@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "singleH1": "error",
+    "requireHtmlLang": "warning",
+    "enforceHeadingOrder": "off"
+  }
+}
