@@ -10,6 +10,8 @@ Add the action to a workflow in your repository:
 - uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
   with:
     files: "**/*.{html,jsx,tsx}"
+    # Optional: emit warnings instead of failing on issues
+    warningOnly: "false"
 ```
 
 For local development inside this monorepo you can reference the action by path:

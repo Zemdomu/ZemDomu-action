@@ -38,6 +38,8 @@ async function run(): Promise<void> {
     const patterns = patternsInput.split(/\r?\n/).filter(Boolean);
     const crossInput = core.getInput("crossComponentAnalysis");
     const cross = crossInput ? /^(true|1)$/i.test(crossInput) : false;
+    const warnInput = core.getInput("warningOnly");
+    const warnOnly = warnInput ? /^(true|1)$/i.test(warnInput) : false;
 
     // Expand glob patterns
     const files = new Set<string>();
@@ -62,7 +64,8 @@ async function run(): Promise<void> {
         foundErrors = true;
       }
       for (const issue of issues) {
-        core.error(`${issue.message} (${issue.rule})`, {
+        const log = warnOnly ? core.warning : core.error;
+        log(`${issue.message} (${issue.rule})`, {
           file,
           startLine: issue.line + 1,
           startColumn: issue.column != null ? issue.column + 1 : undefined,
@@ -70,9 +73,9 @@ async function run(): Promise<void> {
       }
     }
 
-    // If errors, provide a summary of files and lines
+    // If any issues were found, provide a summary
     if (foundErrors) {
-      core.info("\nSemantic lint errors summary:");
+      core.info(`\nSemantic lint ${warnOnly ? "warnings" : "errors"} summary:`);
       for (const [file, issues] of results.entries()) {
         if (issues.length > 0) {
           core.info(`In file: ${file}`);
@@ -83,7 +86,9 @@ async function run(): Promise<void> {
           }
         }
       }
-      core.setFailed("Semantic lint errors found");
+      if (!warnOnly) {
+        core.setFailed("Semantic lint errors found");
+      }
     }
   } catch (err) {
     core.setFailed((err as Error).message);

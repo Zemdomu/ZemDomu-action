@@ -10,6 +10,10 @@ inputs:
     description: 'Enable cross component analysis'
     required: false
     default: 'false'
+  warningOnly:
+    description: 'Emit warnings instead of errors and do not fail the job'
+    required: false
+    default: 'false'
 runs:
   using: 'node20'
   main: 'dist/index.js'
