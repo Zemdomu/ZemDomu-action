@@ -62,7 +62,6 @@ async function run(): Promise<void> {
     const results = await linter.lintFiles(Array.from(files));
 
     // Report issues
-    const isActions = process.env.GITHUB_ACTIONS === "true";
     let errorCount = 0;
     let warningCount = 0;
 
@@ -86,11 +85,8 @@ async function run(): Promise<void> {
           warningCount++;
           core.warning(msg, annotation);
         }
-        if (isActions) {
-          const kind = asError ? 'error' : 'warning';
-          const col = issue.column != null ? issue.column + 1 : 0;
-          console.log(`::${kind} file=${file},line=${issue.line + 1},col=${col}::${msg}`);
-        }
+        // core.error and core.warning already emit workflow commands.
+        // Avoid printing them again to prevent duplicate annotations.
       }
     }
 
