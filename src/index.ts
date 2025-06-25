@@ -86,6 +86,11 @@ async function run(): Promise<void> {
           warningCount++;
           core.warning(msg, annotation);
         }
+        if (isActions) {
+          const kind = asError ? 'error' : 'warning';
+          const col = issue.column != null ? issue.column + 1 : 0;
+          console.log(`::${kind} file=${file},line=${issue.line + 1},col=${col}::${msg}`);
+        }
       }
     }
 

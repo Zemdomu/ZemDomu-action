@@ -12,10 +12,6 @@ Add the action to a workflow in your repository:
     files: "**/*.{html,jsx,tsx}"
     # Optional: emit warnings instead of failing on issues
     warningOnly: "false"
-    # Each rule can be configured with off, warning or error
-    singleH1: error
-    requireHtmlLang: warning
-    enforceHeadingOrder: error
 ```
 
 For local development inside this monorepo you can reference the action by path:
