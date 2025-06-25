@@ -1,12 +1,18 @@
 name: Run ZemDomu Linter
 
 on:
-  push:
+  # Run on every PR against default branch (last check before merge)
+  pull_request:
     paths:
       - "**/*.html"
       - "**/*.jsx"
       - "**/*.tsx"
-  pull_request:
+
+  # Allow manual execution via Actions UI
+  workflow_dispatch: {}
+
+  # Optional: also run on direct pushes to catch issues early
+  push:
     paths:
       - "**/*.html"
       - "**/*.jsx"
@@ -15,11 +21,23 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run ZemDomu Action
-        uses: ./ # This assumes action.yml is in the root
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install & build linter
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run ZemDomu semantic linter
+        uses: ./ # Points to action.yml in repo root
         with:
           files: "**/*.{html,jsx,tsx}"
+          crossComponentAnalysis: "true"
