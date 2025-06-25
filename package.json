@@ -9,9 +9,8 @@
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "build:tsc": "tsc",
-    "build:ncc": "ncc build src/index.ts --license licenses.txt -o dist",
+    "build:ncc": "npx @vercel/ncc build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
-    "prepare": "npm run build",
     "test:lint": "node dist/index.js --files lint-test.html"
   },
   "dependencies": {
