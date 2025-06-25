@@ -31,6 +31,24 @@ jobs:
         with:
           node-version: "20"
 
+      # ─── Test harness ────────────────────────────────────────────
+      - name: Create failing test file
+        run: |
+          cat << 'EOF' > lint-test.html
+          <!DOCTYPE html>
+          <html><body>
+            <h1>One</h1>
+            <h1>Two</h1>
+          </body></html>
+          EOF
+
+      - name: Run ZemDomu against test file
+        uses: ./ # your action
+        with:
+          files: "lint-test.html"
+          crossComponentAnalysis: "false"
+      # ─────────────────────────────────────────────────────────────
+
       - name: Install & build linter
         run: |
           npm ci
