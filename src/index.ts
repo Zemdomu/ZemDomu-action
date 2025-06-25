@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
-import { ProjectLinter } from "zemdomu";
+import { ProjectLinter, LintIssue } from "zemdomu";
 import { promises as fs } from "fs";
 
 class FixedProjectLinter extends ProjectLinter {
@@ -62,34 +62,40 @@ async function run(): Promise<void> {
     const results = await linter.lintFiles(Array.from(files));
 
     // Report issues
-    let found = false;
+    const isActions = process.env.GITHUB_ACTIONS === "true";
+    let errorCount = 0;
+    let warningCount = 0;
+
     for (const [file, issues] of results.entries()) {
-      if (issues.length > 0) found = true;
-      for (const issue of issues) {
-        const logger = warnOnly ? core.warning : core.error;
-        logger(`${issue.message} (${issue.rule})`, {
+      for (const issue of issues as LintIssue[]) {
+        const isError = issue.severity === "error";
+        if (isError) errorCount++; else warningCount++;
+        const msg = `${issue.message} (${issue.rule})`;
+        const annotation = {
           file,
           startLine: issue.line + 1,
           startColumn: issue.column != null ? issue.column + 1 : undefined,
-        });
+        };
+        if (isError) {
+          core.error(msg, annotation);
+        } else {
+          core.warning(msg, annotation);
+        }
+        if (isActions) {
+          const kind = isError ? "error" : "warning";
+          const col = issue.column != null ? issue.column + 1 : 0;
+          console.log(`::${kind} file=${file},line=${issue.line + 1},col=${col}::${msg}`);
+        }
       }
     }
 
-    // Summary and possible failure
-    if (found) {
-      core.info(`\nSemantic lint ${warnOnly ? "warnings" : "errors"} summary:`);
-      for (const [file, issues] of results.entries()) {
-        if (issues.length > 0) {
-          core.info(`In file: ${file}`);
-          for (const issue of issues) {
-            const line = issue.line + 1;
-            const col = issue.column != null ? issue.column + 1 : 0;
-            core.info(`  Line ${line}:${col} — ${issue.rule}`);
-          }
-        }
-      }
-      if (!warnOnly) core.setFailed("Semantic lint errors found");
+    const total = errorCount + warningCount;
+    if (total > 0) {
+      core.info(`\nSemantic lint summary: ${errorCount} error(s), ${warningCount} warning(s)`);
     }
+
+    const exitCode = errorCount > 0 && !warnOnly ? 1 : 0;
+    process.exit(exitCode);
   } catch (err) {
     core.setFailed((err as Error).message);
   }
