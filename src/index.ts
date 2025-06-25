@@ -22,21 +22,21 @@ async function run(): Promise<void> {
   try {
     // Read inputs
     const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx}";
-    const patterns = patternsInput.split(/[\n, ]+/).filter(Boolean);
+    const patterns = patternsInput.split(/\r?\n/).filter(Boolean);
     const crossInput = core.getInput("crossComponentAnalysis");
     const cross = crossInput ? /^(true|1)$/i.test(crossInput) : false;
 
     // Expand glob patterns
-  const files = new Set<string>();
-  for (const pattern of patterns) {
-    const matches = await glob(pattern, {
-      nodir: true,
-      ignore: ["**/node_modules/**", "**/dist/**", "**/.github/**"],
-    });
-    for (const m of matches) {
-      files.add(m);
+    const files = new Set<string>();
+    for (const pattern of patterns) {
+      const matches = await glob(pattern, {
+        nodir: true,
+        ignore: ["**/node_modules/**", "**/dist/**", "**/.github/**"],
+      });
+      for (const m of matches) {
+        files.add(m);
+      }
     }
-  }
 
     // Run the linter
     const linter = new ProjectLinter({ crossComponentAnalysis: cross });
