@@ -1,0 +1,25 @@
+name: Run ZemDomu Linter
+
+on:
+  push:
+    paths:
+      - "**/*.html"
+      - "**/*.jsx"
+      - "**/*.tsx"
+  pull_request:
+    paths:
+      - "**/*.html"
+      - "**/*.jsx"
+      - "**/*.tsx"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run ZemDomu Action
+        uses: ./ # This assumes action.yml is in the root
+        with:
+          files: "**/*.{html,jsx,tsx}"
