@@ -1,0 +1,15 @@
+name: 'ZemDomu Lint'
+description: 'Run ZemDomu semantic linter'
+author: 'Zacharias Eryd Berlin'
+inputs:
+  files:
+    description: 'Glob patterns of files to lint'
+    required: false
+    default: '**/*.{html,jsx,tsx}'
+  crossComponentAnalysis:
+    description: 'Enable cross component analysis'
+    required: false
+    default: 'false'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
