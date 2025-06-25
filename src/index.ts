@@ -68,21 +68,26 @@ async function run(): Promise<void> {
 
     for (const [file, issues] of results.entries()) {
       for (const issue of issues as LintIssue[]) {
-        const isError = issue.severity === "error";
-        if (isError) errorCount++; else warningCount++;
+        const sev = core.getInput(issue.rule) as 'off' | 'warning' | 'error';
+        if (sev === 'off') {
+          continue;
+        }
+        const asError = sev === 'error' && !warnOnly;
         const msg = `${issue.message} (${issue.rule})`;
         const annotation = {
           file,
           startLine: issue.line + 1,
           startColumn: issue.column != null ? issue.column + 1 : undefined,
         };
-        if (isError) {
+        if (asError) {
+          errorCount++;
           core.error(msg, annotation);
         } else {
+          warningCount++;
           core.warning(msg, annotation);
         }
         if (isActions) {
-          const kind = isError ? "error" : "warning";
+          const kind = asError ? 'error' : 'warning';
           const col = issue.column != null ? issue.column + 1 : 0;
           console.log(`::${kind} file=${file},line=${issue.line + 1},col=${col}::${msg}`);
         }
