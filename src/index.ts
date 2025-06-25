@@ -2,23 +2,41 @@ import * as core from "@actions/core";
 import { glob } from "glob";
 import { ProjectLinter } from "zemdomu";
 
+function parseCliArgs(): void {
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith("--")) {
+      const name = args[i].slice(2);
+      let value = "true";
+      if (i + 1 < args.length && !args[i + 1].startsWith("--")) {
+        value = args[i + 1];
+        i++;
+      }
+      const key = `INPUT_${name.replace(/-/g, "").toUpperCase()}`;
+      process.env[key] = value;
+    }
+  }
+}
+
 async function run(): Promise<void> {
   try {
     // Read inputs
     const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx}";
     const patterns = patternsInput.split(/[\n, ]+/).filter(Boolean);
-    const cross = core.getBooleanInput("crossComponentAnalysis", {
-      required: false,
-    });
+    const crossInput = core.getInput("crossComponentAnalysis");
+    const cross = crossInput ? /^(true|1)$/i.test(crossInput) : false;
 
     // Expand glob patterns
-    const files = new Set<string>();
-    for (const pattern of patterns) {
-      const matches = await glob(pattern, { nodir: true });
-      for (const m of matches) {
-        files.add(m);
-      }
+  const files = new Set<string>();
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, {
+      nodir: true,
+      ignore: ["**/node_modules/**", "**/dist/**", "**/.github/**"],
+    });
+    for (const m of matches) {
+      files.add(m);
     }
+  }
 
     // Run the linter
     const linter = new ProjectLinter({ crossComponentAnalysis: cross });
@@ -59,4 +77,5 @@ async function run(): Promise<void> {
   }
 }
 
+parseCliArgs();
 run();
