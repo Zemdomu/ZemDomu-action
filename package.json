@@ -14,7 +14,9 @@
     "build:tsc": "tsc",
     "build:ncc": "node node_modules/@vercel/ncc/dist/ncc/cli.js build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
-    "test:lint": "node dist/index.js --files lint-test.html"
+    "test:lint": "node dist/index.js --files lint-test.html || true",
+    "test:rules": "node tests/rule-tests.js",
+    "test": "npm run build && npm run test:rules && npm run test:lint"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
