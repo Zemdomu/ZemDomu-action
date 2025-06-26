@@ -10,8 +10,6 @@ Add the action to a workflow in your repository:
 - uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
   with:
     files: "**/*.{html,jsx,tsx}"
-    # Optional: emit warnings instead of failing on issues
-    warningOnly: "false"
 ```
 
 For local development inside this monorepo you can reference the action by path:
@@ -22,19 +20,36 @@ For local development inside this monorepo you can reference the action by path:
 
 The action uses the `zemdomu` npm package from [ZemDomu](https://www.npmjs.com/package/zemdomu).
 
-### Configuring rule severity
+## Configuring rule severity with `.zemdomurc.json`
 
-Each lint rule can be individually configured when running the action.  Pass the
-rule name as an input with one of the values `off`, `warning`, or `error`:
+Rule severities are controlled via a `.zemdomurc.json` file in your repository root. This file should look like:
 
-```yaml
-jobs:
-  lint:
-    steps:
-      - uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
-        with:
-          requireHtmlLang: warning
-          singleH1: error
+```json
+{
+  "rules": {
+    "singleH1": "warning",
+    "requireHtmlLang": "warning",
+    "enforceHeadingOrder": "warning",
+    "uniqueIds": "warning",
+    "requireIframeTitle": "warning",
+    "requireImageInputAlt": "warning",
+    "requireLabelForFormControls": "warning",
+    "requireAltText": "warning",
+    "enforceListNesting": "warning",
+    "requireHrefOnAnchors": "warning",
+    "requireButtonText": "warning",
+    "preventEmptyInlineTags": "warning",
+    "requireSectionHeading": "warning",
+    "requireTableCaption": "warning",
+    "requireLinkText": "warning",
+    "requireNavLinks": "warning"
+  }
+}
 ```
 
-See `action.yml` for the full list of supported rule names.
+- Each rule can be set to `off`, `warning`, or `error`.
+- Only rules set to `error` will cause the workflow to fail.
+- To emit only warnings and never fail the workflow, set all rules to `warning`.
+- For a full list of rules, see the ZemDomu documentation or the example above.
+
+Remove the `warningOnly` input from your workflow; use `.zemdomurc.json` for all severity configuration.

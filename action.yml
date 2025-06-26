@@ -10,10 +10,6 @@ inputs:
     description: "Enable cross component analysis"
     required: false
     default: "false"
-  warningOnly:
-    description: "Emit warnings instead of errors and do not fail the job"
-    required: false
-    default: "false"
   configPath:
     description: "Path to JSON config file defining rule severities"
     required: false
