@@ -70,6 +70,6 @@ jobs:
           configPath: ${{ inputs.configPath }}
       - name: Upload SARIF report
         if: always()
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif-file: zemdomu-report.sarif
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: zemdomu-report.sarif
