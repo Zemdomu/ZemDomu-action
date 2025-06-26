@@ -21,3 +21,14 @@ inputs:
 runs:
   using: 'node20'
   main: 'dist/index.js'
+  pre:
+    - name: Cache Node.js dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
+    - name: Install dependencies
+      run: npm install
