@@ -32,6 +32,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
       - name: Cleanup dependencies
         run: rm -rf node_modules
       - name: Install dependencies

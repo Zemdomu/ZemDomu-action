@@ -1,34 +1,23 @@
-name: 'ZemDomu Lint'
-description: 'Run ZemDomu semantic linter'
-author: 'Zacharias Eryd Berlin'
+name: "ZemDomu Lint"
+description: "Run ZemDomu semantic linter"
+author: "Zacharias Eryd Berlin"
 inputs:
   files:
-    description: 'Glob patterns of files to lint'
+    description: "Glob patterns of files to lint"
     required: false
-    default: '**/*.{html,jsx,tsx}'
+    default: "**/*.{html,jsx,tsx}"
   crossComponentAnalysis:
-    description: 'Enable cross component analysis'
+    description: "Enable cross component analysis"
     required: false
-    default: 'false'
+    default: "false"
   warningOnly:
-    description: 'Emit warnings instead of errors and do not fail the job'
+    description: "Emit warnings instead of errors and do not fail the job"
     required: false
-    default: 'false'
+    default: "false"
   configPath:
     description: "Path to JSON config file defining rule severities"
     required: false
     default: ".zemdomurc.json"
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
-  pre:
-    - name: Cache Node.js dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-          ${{ runner.os }}-
-    - name: Install dependencies
-      run: npm install
+  using: "node20"
+  main: "dist/index.js"
