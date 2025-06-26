@@ -11,20 +11,16 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "**/*.html"
-      - "**/*.jsx"
-      - "**/*.tsx"
   workflow_dispatch:
     inputs:
       crossComponentAnalysis:
-        description: 'Enable cross component analysis'
+        description: "Enable cross component analysis"
         required: false
-        default: 'false'
+        default: "false"
       warningOnly:
-        description: 'Emit warnings instead of errors'
+        description: "Emit warnings instead of errors"
         required: false
-        default: 'false'
+        default: "false"
       configPath:
         description: "Path to JSON config file defining rule severities"
         required: false
