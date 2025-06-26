@@ -68,8 +68,11 @@ jobs:
           crossComponentAnalysis: ${{ inputs.crossComponentAnalysis }}
           warningOnly: ${{ inputs.warningOnly }}
           configPath: ${{ inputs.configPath }}
+      - name: Run ZemDomu linter (SARIF)
+        run: node dist/index.js --files "**/*.{html,jsx,tsx}" --sarif --sarif-file zemdomu-report.sarif
+
       - name: Upload SARIF report
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: zemdomu-report.sarif

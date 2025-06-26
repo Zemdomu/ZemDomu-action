@@ -31,22 +31,26 @@ function parseCliArgs(): void {
   }
 }
 
-function issuesToSarif(results: Map<string, LintIssue[]>, config: Record<string, 'off' | 'warning' | 'error'>) {
+function issuesToSarif(
+  results: Map<string, LintIssue[]>,
+  config: Record<string, "off" | "warning" | "error">
+) {
   const sarif: any = {
     version: "2.1.0",
-    $schema: "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+    $schema:
+      "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
     runs: [
       {
         tool: {
           driver: {
             name: "ZemDomu",
             informationUri: "https://www.npmjs.com/package/zemdomu",
-            rules: []
-          }
+            rules: [],
+          },
         },
-        results: []
-      }
-    ]
+        results: [],
+      },
+    ],
   };
   const ruleSet = new Set();
   for (const issues of results.values()) {
@@ -54,30 +58,31 @@ function issuesToSarif(results: Map<string, LintIssue[]>, config: Record<string,
       ruleSet.add(issue.rule);
     }
   }
-  sarif.runs[0].tool.driver.rules = Array.from(ruleSet).map(rule => ({
+  sarif.runs[0].tool.driver.rules = Array.from(ruleSet).map((rule) => ({
     id: rule,
-    name: rule
+    name: rule,
   }));
   for (const [file, issues] of results.entries()) {
     for (const issue of issues) {
-      let sev = config[issue.rule] as 'off' | 'warning' | 'error' | undefined;
+      let sev = config[issue.rule] as "off" | "warning" | "error" | undefined;
       if (!sev) sev = issue.severity;
-      if (sev === 'off') continue;
+      if (sev === "off") continue;
       sarif.runs[0].results.push({
         ruleId: issue.rule,
         message: { text: issue.message },
-        level: sev === 'error' ? 'error' : 'warning',
+        level: sev === "error" ? "error" : "warning",
         locations: [
           {
             physicalLocation: {
               artifactLocation: { uri: file },
               region: {
                 startLine: issue.line + 1,
-                startColumn: issue.column != null ? issue.column + 1 : undefined
-              }
-            }
-          }
-        ]
+                startColumn:
+                  issue.column != null ? issue.column + 1 : undefined,
+              },
+            },
+          },
+        ],
       });
     }
   }
@@ -99,18 +104,25 @@ async function run(): Promise<void> {
     try {
       const raw = await fs.readFile(configPath, "utf8");
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === "object" && parsed.rules && typeof parsed.rules === "object") {
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        parsed.rules &&
+        typeof parsed.rules === "object"
+      ) {
         config = parsed.rules;
       }
     } catch (err: any) {
       if (err.code !== "ENOENT") {
-        core.warning(`Failed to read config file ${configPath}: ${(err as Error).message}`);
+        core.warning(
+          `Failed to read config file ${configPath}: ${(err as Error).message}`
+        );
       }
     }
 
     // Determine file list (literal vs glob)
     const files = new Set<string>();
-    if (patterns.every(p => !/[*?\[]/.test(p))) {
+    if (patterns.every((p) => !/[*?\[]/.test(p))) {
       // literal paths only
       for (const p of patterns) files.add(p);
     } else {
@@ -134,14 +146,14 @@ async function run(): Promise<void> {
 
     for (const [file, issues] of results.entries()) {
       for (const issue of issues as LintIssue[]) {
-        let sev = config[issue.rule] as 'off' | 'warning' | 'error' | undefined;
+        let sev = config[issue.rule] as "off" | "warning" | "error" | undefined;
         if (!sev) {
           sev = issue.severity;
         }
-        if (sev === 'off') {
+        if (sev === "off") {
           continue;
         }
-        const asError = sev === 'error' && !warnOnly;
+        const asError = sev === "error" && !warnOnly;
         const msg = `${issue.message} (${issue.rule})`;
         const annotation = {
           file,
@@ -162,13 +174,18 @@ async function run(): Promise<void> {
 
     const total = errorCount + warningCount;
     if (total > 0) {
-      core.info(`\nSemantic lint summary: ${errorCount} error(s), ${warningCount} warning(s)`);
+      core.info(
+        `\nSemantic lint summary: ${errorCount} error(s), ${warningCount} warning(s)`
+      );
     }
 
-    const sarifOutput = process.argv.includes("--sarif") || process.argv.includes("--sarif-file");
+    const sarifOutput =
+      process.argv.includes("--sarif") || process.argv.includes("--sarif-file");
     if (sarifOutput) {
       const sarif = issuesToSarif(results, config);
-      const outPath = process.argv.includes("--sarif-file") ? process.argv[process.argv.indexOf("--sarif-file") + 1] : "zemdomu-report.sarif";
+      const outPath = process.argv.includes("--sarif-file")
+        ? process.argv[process.argv.indexOf("--sarif-file") + 1]
+        : "zemdomu-report.sarif";
       await fs.writeFile(outPath, JSON.stringify(sarif, null, 2), "utf8");
       core.info(`SARIF report written to ${outPath}`);
     }
