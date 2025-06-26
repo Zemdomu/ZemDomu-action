@@ -1,6 +1,9 @@
 name: "ZemDomu Lint"
 description: "Run ZemDomu semantic linter"
 author: "Zacharias Eryd Berlin"
+branding:
+  icon: "alert-circle"
+  color: "purple"
 inputs:
   files:
     description: "Glob patterns of files to lint"
