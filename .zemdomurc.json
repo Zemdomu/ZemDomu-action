@@ -1,7 +1,20 @@
 {
   "rules": {
-    "singleH1": "error",
+    "singleH1": "warning",
     "requireHtmlLang": "warning",
-    "enforceHeadingOrder": "off"
+    "enforceHeadingOrder": "warning",
+    "uniqueIds": "warning",
+    "requireIframeTitle": "warning",
+    "requireImageInputAlt": "warning",
+    "requireLabelForFormControls": "warning",
+    "requireAltText": "warning",
+    "enforceListNesting": "warning",
+    "requireHrefOnAnchors": "warning",
+    "requireButtonText": "warning",
+    "preventEmptyInlineTags": "warning",
+    "requireSectionHeading": "warning",
+    "requireTableCaption": "warning",
+    "requireLinkText": "warning",
+    "requireNavLinks": "warning"
   }
 }
