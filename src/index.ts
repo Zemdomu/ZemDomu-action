@@ -16,7 +16,13 @@ async function run(): Promise<void> {
       for (const m of matches) files.add(m);
     }
 
-    const linter = new ProjectLinter();
+    const cross = core.getBooleanInput("crossComponentAnalysis");
+    const depthInput = core.getInput("crossComponentDepth");
+    const depth = depthInput ? parseInt(depthInput, 10) : undefined;
+    const linter = new ProjectLinter({
+      crossComponentAnalysis: cross,
+      crossComponentDepth: depth,
+    });
     const results = await linter.lintFiles(Array.from(files));
     let hasIssues = false;
     for (const [file, issues] of results.entries()) {

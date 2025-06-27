@@ -10,6 +10,10 @@ inputs:
     description: 'Enable cross component analysis'
     required: false
     default: 'false'
+  crossComponentDepth:
+    description: 'Maximum depth for cross component analysis'
+    required: false
+    default: '3'
 runs:
   using: 'node20'
   main: 'dist/index.js'
