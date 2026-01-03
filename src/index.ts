@@ -16,7 +16,16 @@ async function run(): Promise<void> {
       for (const m of matches) files.add(m);
     }
 
-    const cross = core.getBooleanInput("crossComponentAnalysis");
+    const crossInput = core.getInput("crossComponentAnalysis");
+    let cross = false;
+    if (crossInput) {
+      const normalized = crossInput.trim().toLowerCase();
+      if (normalized === "true") {
+        cross = true;
+      } else if (normalized !== "false") {
+        throw new Error('crossComponentAnalysis must be "true" or "false"');
+      }
+    }
     const depthInput = core.getInput("crossComponentDepth");
     const depth = depthInput ? parseInt(depthInput, 10) : undefined;
     const linter = new ProjectLinter({
