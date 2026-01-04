@@ -1,6 +1,36 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
-import { ProjectLinter } from "zemdomu";
+
+type ZemdomuModule = typeof import("zemdomu");
+
+let ProjectLinter: ZemdomuModule["ProjectLinter"];
+try {
+  ({ ProjectLinter } = require("../../ZemDomu-Core/out") as ZemdomuModule);
+} catch {
+  ({ ProjectLinter } = require("zemdomu") as ZemdomuModule);
+}
+
+type RulesConfig = Record<string, "error" | "warning" | "off">;
+
+const DEFAULT_RULES: RulesConfig = {
+  requireSectionHeading: "error",
+  enforceHeadingOrder: "error",
+  singleH1: "error",
+  requireAltText: "error",
+  requireLabelForFormControls: "error",
+  enforceListNesting: "error",
+  requireLinkText: "error",
+  requireTableCaption: "error",
+  preventEmptyInlineTags: "warning",
+  requireHrefOnAnchors: "error",
+  requireButtonText: "error",
+  requireIframeTitle: "error",
+  requireHtmlLang: "error",
+  requireImageInputAlt: "error",
+  requireNavLinks: "warning",
+  uniqueIds: "error",
+  noTabindexGreaterThanZero: "warning",
+};
 
 async function run(): Promise<void> {
   try {
@@ -31,11 +61,15 @@ async function run(): Promise<void> {
     const linter = new ProjectLinter({
       crossComponentAnalysis: cross,
       crossComponentDepth: depth,
+      rules: DEFAULT_RULES,
     });
     const results = await linter.lintFiles(Array.from(files));
     let hasIssues = false;
     for (const [file, issues] of results.entries()) {
       for (const issue of issues) {
+        if (issue.rule === "parseError" && file.toLowerCase().endsWith(".html")) {
+          continue;
+        }
         const severity = issue.severity === "warning" ? "warning" : "error";
         const log = severity === "warning" ? core.warning : core.error;
         log(`${issue.message} (${issue.rule})`, {
