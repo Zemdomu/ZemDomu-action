@@ -34819,7 +34819,9 @@ async function run() {
         let hasIssues = false;
         for (const [file, issues] of results.entries()) {
             for (const issue of issues) {
-                core.error(`${issue.message} (${issue.rule})`, {
+                const severity = issue.severity === "warning" ? "warning" : "error";
+                const log = severity === "warning" ? core.warning : core.error;
+                log(`${issue.message} (${issue.rule})`, {
                     file,
                     startLine: issue.line + 1,
                 });
@@ -34827,7 +34829,7 @@ async function run() {
             }
         }
         if (hasIssues) {
-            core.setFailed("Semantic-HTML linting failed; see errors above.");
+            core.setFailed("Semantic-HTML linting found issues; see annotations above.");
         }
     }
     catch (err) {
