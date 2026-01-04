@@ -1,21 +1,84 @@
 # ZemDomu GitHub Action
 
-This package provides a GitHub Action that runs the ZemDomu linter on your project.
+Run the ZemDomu semantic linter in GitHub Actions to prevent SEO and
+accessibility regressions before code lands.
 
-## Usage
+## What it does
 
-Add the action to a workflow in your repository:
+- Lints HTML, JSX, TSX, and Vue templates in CI.
+- Surfaces findings as GitHub Actions annotations.
+- Fails the job when issues are detected.
+- Supports cross-component analysis for component trees.
+
+## Quick start
 
 ```yaml
-- uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
-  with:
-    files: "**/*.{html,jsx,tsx,vue}"
+name: ZemDomu SEO Guard
+on: [pull_request]
+
+jobs:
+  zemdomu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Zemdomu/Zemdomu-actions@main
+        with:
+          files: |
+            **/*.{html,jsx,tsx,vue}
 ```
 
-For local development inside this monorepo you can reference the action by path:
+## Inputs
+
+- `files`: Glob patterns (newline, comma, or space separated).
+  Default: `**/*.{html,jsx,tsx,vue}`
+- `crossComponentAnalysis`: Enable cross-component analysis.
+  Default: `false`
+- `crossComponentDepth`: Maximum depth for cross-component analysis.
+  Default: `3`
+
+## Outputs
+
+None. The action reports findings via GitHub Actions annotations and fails the
+job if issues are detected.
+
+## Examples
+
+Run only on frontend folders and enable cross-component analysis:
+
+```yaml
+- uses: Zemdomu/Zemdomu-actions@main
+  with:
+    files: |
+      apps/web/**/*.{html,jsx,tsx,vue}
+      packages/ui/**/*.{html,jsx,tsx,vue}
+    crossComponentAnalysis: true
+    crossComponentDepth: 4
+```
+
+## Local development (monorepo)
+
+Reference the action by path:
 
 ```yaml
 - uses: ./packages/Zemdomu-Actions
 ```
 
-The action uses the `zemdomu` npm package from [ZemDomu](https://www.npmjs.com/package/zemdomu).
+Build and test from the action package:
+
+```bash
+npm run build
+npm test
+```
+
+## Links
+
+Development happens in a private monorepo; this repository is the public mirror
+for issues and updates.
+
+- Public mirror: https://github.com/Zemdomu/Zemdomu-actions
+- Issues and suggestions: https://github.com/Zemdomu/Zemdomu-actions/issues
+- ZemDomu core: https://www.npmjs.com/package/zemdomu
+
+## License
+
+MIT (c) 2025 Zacharias Eryd Berlin
