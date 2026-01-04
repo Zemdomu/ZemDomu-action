@@ -9,7 +9,7 @@ Add the action to a workflow in your repository:
 ```yaml
 - uses: Zelcus/ZemDomu-mono/packages/Zemdomu-Actions@main
   with:
-    files: "**/*.{html,jsx,tsx}"
+    files: "**/*.{html,jsx,tsx,vue}"
 ```
 
 For local development inside this monorepo you can reference the action by path:

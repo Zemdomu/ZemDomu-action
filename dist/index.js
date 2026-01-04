@@ -34787,7 +34787,7 @@ const glob_1 = __nccwpck_require__(1363);
 const zemdomu_1 = __nccwpck_require__(4464);
 async function run() {
     try {
-        const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx}";
+        const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx,vue}";
         const patterns = patternsInput
             .split(/\r?\n/)
             .flatMap((p) => p.split(/[, ]+/))

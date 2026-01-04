@@ -4,7 +4,7 @@ import { ProjectLinter } from "zemdomu";
 
 async function run(): Promise<void> {
   try {
-    const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx}";
+    const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx,vue}";
     const patterns = patternsInput
       .split(/\r?\n/)
       .flatMap((p) => p.split(/[, ]+/))
