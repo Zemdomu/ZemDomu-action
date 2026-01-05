@@ -3,7 +3,12 @@
 Run the ZemDomu semantic linter in GitHub Actions to prevent SEO and
 accessibility regressions before code lands.
 
-## What it does
+## What it is
+
+ZemDomu Actions runs the core ZemDomu linter in CI and surfaces findings as
+GitHub Actions annotations.
+
+## Features
 
 - Lints HTML, JSX, TSX, and Vue templates in CI.
 - Surfaces findings as GitHub Actions annotations.
@@ -21,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Zemdomu/Zemdomu-actions@main
+      - uses: Zemdomu/ZemDomu-action@main
         with:
           files: |
             **/*.{html,jsx,tsx,vue}
@@ -46,7 +51,7 @@ job if issues are detected.
 Run only on frontend folders and enable cross-component analysis:
 
 ```yaml
-- uses: Zemdomu/Zemdomu-actions@main
+- uses: Zemdomu/ZemDomu-action@main
   with:
     files: |
       apps/web/**/*.{html,jsx,tsx,vue}
@@ -75,8 +80,8 @@ npm test
 Development happens in a private monorepo; this repository is the public mirror
 for issues and updates.
 
-- Public mirror: https://github.com/Zemdomu/Zemdomu-actions
-- Issues and suggestions: https://github.com/Zemdomu/Zemdomu-actions/issues
+- Public mirror: https://github.com/Zemdomu/ZemDomu-action
+- Issues and suggestions: https://github.com/Zemdomu/ZemDomu-action/issues
 - ZemDomu core: https://www.npmjs.com/package/zemdomu
 
 ## License
