@@ -1,6 +1,6 @@
 {
   "name": "zemdomu-action",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "GitHub Action for ZemDomu semantic linting",
   "main": "dist/index.js",
   "files": [
