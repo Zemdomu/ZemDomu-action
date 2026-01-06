@@ -19,9 +19,9 @@ if (result.status === 0) {
 }
 
 const output = result.stdout + result.stderr;
-if (!output.includes('requireAltText')) {
+if (!output.includes('ZMD004')) {
   console.error(output);
-  throw new Error('Expected requireAltText warning');
+  throw new Error('Expected ZMD004 warning');
 }
 
 console.log('Action process test passed');

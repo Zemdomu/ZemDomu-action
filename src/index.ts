@@ -72,7 +72,9 @@ async function run(): Promise<void> {
         }
         const severity = issue.severity === "warning" ? "warning" : "error";
         const log = severity === "warning" ? core.warning : core.error;
-        log(`${issue.message} (${issue.rule})`, {
+        const issueWithCode = issue as { code?: string; rule: string };
+        const ruleId = issueWithCode.code ?? issue.rule;
+        log(`${issue.message} (${ruleId})`, {
           file,
           startLine: issue.line + 1,
         });

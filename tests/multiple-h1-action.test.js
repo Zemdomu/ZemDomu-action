@@ -19,9 +19,9 @@ if (result.status === 0) {
 }
 
 const output = result.stdout + result.stderr;
-if (!output.includes('singleH1')) {
+if (!output.includes('ZMD003')) {
   console.error(output);
-  throw new Error('Expected singleH1 warning');
+  throw new Error('Expected ZMD003 warning');
 }
 
 console.log('Multiple h1 action test passed');
