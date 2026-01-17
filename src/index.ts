@@ -12,6 +12,8 @@ try {
 
 type RulesConfig = Record<string, "error" | "warning" | "off">;
 
+const DOCS_BASE_URL = "https://zemdomu.dev/docs/";
+
 const DEFAULT_RULES: RulesConfig = {
   requireSectionHeading: "error",
   enforceHeadingOrder: "error",
@@ -31,6 +33,13 @@ const DEFAULT_RULES: RulesConfig = {
   uniqueIds: "error",
   noTabindexGreaterThanZero: "warning",
 };
+
+const DOCS_RULES = new Set(Object.keys(DEFAULT_RULES));
+
+function docsUrlForRule(rule: string): string | null {
+  if (!DOCS_RULES.has(rule)) return null;
+  return `${DOCS_BASE_URL}${encodeURIComponent(rule)}`;
+}
 
 async function run(): Promise<void> {
   try {
@@ -74,7 +83,11 @@ async function run(): Promise<void> {
         const log = severity === "warning" ? core.warning : core.error;
         const issueWithCode = issue as { code?: string; rule: string };
         const ruleId = issueWithCode.code ?? issue.rule;
-        log(`${issue.message} (${ruleId})`, {
+        const docsUrl = docsUrlForRule(issue.rule);
+        const message = docsUrl
+          ? `${issue.message} (${ruleId}) See ${docsUrl}`
+          : `${issue.message} (${ruleId})`;
+        log(message, {
           file,
           startLine: issue.line + 1,
         });
