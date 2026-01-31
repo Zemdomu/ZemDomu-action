@@ -14,6 +14,8 @@ GitHub Actions annotations.
 - Surfaces findings as GitHub Actions annotations.
 - Fails the job when issues are detected.
 - Supports cross-component analysis for component trees.
+- Flags buttons without a non-empty accessible name (text, aria-label, aria-labelledby, or labeled content).
+- Flags unresolved TODO-ZMD placeholders left by quick fixes.
 
 ## Quick start
 

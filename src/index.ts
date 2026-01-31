@@ -32,6 +32,7 @@ const DEFAULT_RULES: RulesConfig = {
   requireNavLinks: "warning",
   uniqueIds: "error",
   noTabindexGreaterThanZero: "warning",
+  preventZemdomuPlaceholders: "warning",
 };
 
 const DOCS_RULES = new Set(Object.keys(DEFAULT_RULES));
