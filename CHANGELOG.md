@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.3.5
+
 ### Feature
 
 - Feature: surface unresolved TODO-ZMD placeholders (ZMD018)
