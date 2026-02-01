@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Bugfix
+
+- Bugfix: bundle updated requireLinkText behavior for accessible link names.
+- Bugfix: bundle updated requireHtmlLang validation for invalid language tags.
+
 ## 0.3.5
 
 ### Feature
