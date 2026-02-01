@@ -4,6 +4,7 @@
 
 - Bugfix: bundle updated requireLinkText behavior for accessible link names.
 - Bugfix: bundle updated requireHtmlLang validation for invalid language tags.
+- Bugfix: bundle updated requireAltText behavior for inline SVG icons.
 
 ## 0.3.5
 
