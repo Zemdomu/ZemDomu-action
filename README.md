@@ -79,12 +79,9 @@ npm test
 
 ## Links
 
-Development happens in a private monorepo; this repository is the public mirror
-for issues and updates.
-
-- Public mirror: https://github.com/Zemdomu/ZemDomu-action
 - Issues and suggestions: https://github.com/Zemdomu/ZemDomu-action/issues
 - ZemDomu core: https://www.npmjs.com/package/zemdomu
+- Website: https://zemdomu.dev/
 
 ## License
 
