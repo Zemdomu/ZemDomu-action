@@ -6,6 +6,10 @@
 - Bugfix: bundle updated requireHtmlLang validation for invalid language tags.
 - Bugfix: bundle updated requireAltText behavior for inline SVG icons.
 
+### Feature
+
+- Feature: add npm funding metadata linking to Buy Me a Coffee for `npm fund`.
+
 ### Security
 
 - Security: override @isaacs/brace-expansion to 5.0.1 to address the dependabot alert.
