@@ -33,6 +33,9 @@ const DEFAULT_RULES: RulesConfig = {
   uniqueIds: "error",
   noTabindexGreaterThanZero: "warning",
   preventZemdomuPlaceholders: "warning",
+  requireDocumentTitle: "error",
+  requireSingleMain: "error",
+  ariaValidAttrValue: "error",
 };
 
 const DOCS_RULES = new Set(Object.keys(DEFAULT_RULES));

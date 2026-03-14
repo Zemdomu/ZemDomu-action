@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.3.6
+
 ### Bugfix
 
 - Bugfix: bundle updated requireLinkText behavior for accessible link names.
@@ -8,6 +10,9 @@
 
 ### Feature
 
+- Feature: surface `requireDocumentTitle` (ZMD019) violations in GitHub Action annotations.
+- Feature: surface `requireSingleMain` (ZMD020) violations in GitHub Action annotations.
+- Feature: surface `ariaValidAttrValue` (ZMD021) violations in GitHub Action annotations.
 - Feature: add npm funding metadata linking to Buy Me a Coffee for `npm fund`.
 
 ### Security
