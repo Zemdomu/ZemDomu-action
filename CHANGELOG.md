@@ -1,7 +1,5 @@
 ## Unreleased
 
-## 0.3.6
-
 ### Bugfix
 
 - Bugfix: bundle updated requireLinkText behavior for accessible link names.
