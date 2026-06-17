@@ -16,6 +16,7 @@
 ### Security
 
 - Security: override @isaacs/brace-expansion to 5.0.1 to address the dependabot alert.
+- Security: refresh Action dependency overrides to clear npm audit vulnerabilities in the bundled action runtime.
 
 ## 0.3.5
 
