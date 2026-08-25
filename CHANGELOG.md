@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Security
+
+- Security: update the undici override and lockfile to patched GitHub Action runtime dependencies.
+
 ### Bugfix
 
 - Bugfix: bundle updated requireLinkText behavior for accessible link names.
