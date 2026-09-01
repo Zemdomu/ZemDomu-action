@@ -3,6 +3,8 @@
 ### Security
 
 - Security: update the undici override and lockfile to patched GitHub Action runtime dependencies.
+- Security: override @isaacs/brace-expansion to 5.0.1 to address the dependabot alert.
+- Security: refresh Action dependency overrides to clear npm audit vulnerabilities in the bundled action runtime.
 
 ### Bugfix
 
@@ -17,10 +19,11 @@
 - Feature: surface `ariaValidAttrValue` (ZMD021) violations in GitHub Action annotations.
 - Feature: add npm funding metadata linking to Buy Me a Coffee for `npm fund`.
 
-### Security
+### Docs
 
-- Security: override @isaacs/brace-expansion to 5.0.1 to address the dependabot alert.
-- Security: refresh Action dependency overrides to clear npm audit vulnerabilities in the bundled action runtime.
+- Docs: align Action metadata, workflow examples, and README copy with the
+  approved ZemDomu GitHub Action name, pull-request annotation outcome,
+  supported cross-component scope, and static-analysis limits.
 
 ## 0.3.5
 

@@ -1,5 +1,5 @@
-name: 'ZemDomu Lint'
-description: 'Run ZemDomu semantic linter'
+name: 'ZemDomu GitHub Action'
+description: 'Annotate pull requests with supported ZemDomu semantic accessibility findings'
 author: 'Zacharias Eryd Berlin'
 inputs:
   files:
@@ -7,11 +7,11 @@ inputs:
     required: false
     default: '**/*.{html,jsx,tsx,vue}'
   crossComponentAnalysis:
-    description: 'Enable cross component analysis'
+    description: 'Analyze supported issues across local React and Vue component imports'
     required: false
     default: 'false'
   crossComponentDepth:
-    description: 'Maximum depth for cross component analysis'
+    description: 'Maximum local import depth for cross-component analysis'
     required: false
     default: '3'
 runs:

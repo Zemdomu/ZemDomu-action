@@ -1,27 +1,31 @@
 # ZemDomu GitHub Action
 
-> Semantic checks in CI before markup regressions ship.
+> Pull-request annotations for supported semantic accessibility defects.
 
-The ZemDomu GitHub Action runs ZemDomu semantic checks in CI and surfaces
-findings as GitHub annotations. It helps teams catch structural,
-accessibility, and search-related markup issues before they land in the main
-branch.
+The ZemDomu GitHub Action runs the shared ZemDomu Core rules in CI and surfaces
+findings as pull-request annotations. It analyzes supported HTML, JSX, TSX, and
+Vue source so teams can catch semantic HTML and accessibility defects before
+merge.
 
-Most linters check syntax. ZemDomu checks meaning.
+Use these static source checks before runtime and manual accessibility testing,
+not instead of them. A clean Action run does not establish accessibility or
+WCAG conformance.
 
 ## What It Is
 
-ZemDomu Actions runs the shared ZemDomu rules engine inside GitHub Actions. It
+The ZemDomu GitHub Action runs the shared ZemDomu Core engine inside GitHub
+Actions. It
 is designed for teams that want semantic issues to be enforced in pull requests
 instead of discovered later through audits or production review.
 
 ## Why ZemDomu
 
-Compared with scanner-only CI steps and generic lint jobs, ZemDomu focuses on
-semantic structure and actionable remediation.
+ZemDomu adds focused source-level semantic structure analysis to pull-request
+workflows and complements rendered-DOM scanners.
 
 - It checks semantic HTML, accessible naming, and document structure.
-- It can analyze component trees instead of only isolated files.
+- It can analyze named structural rules across statically resolvable React and
+  Vue component imports when cross-component analysis is enabled.
 - It shares the same rules engine as the VS Code extension and CLI.
 - It reports findings directly where teams already review code: in pull requests.
 
@@ -30,13 +34,13 @@ semantic structure and actionable remediation.
 - Lints HTML, JSX, TSX, and Vue templates in CI.
 - Surfaces findings as GitHub Actions annotations.
 - Fails the job when issues are detected.
-- Supports cross-component analysis for component trees.
-- Flags semantic issues that affect accessibility and SEO.
+- Supports bounded cross-component analysis for local React and Vue imports.
+- Flags supported semantic HTML and accessibility source patterns.
 
 ## Quick Start
 
 ```yaml
-name: ZemDomu Semantic Checks
+name: ZemDomu Semantic Accessibility Checks
 on: [pull_request]
 
 jobs:
