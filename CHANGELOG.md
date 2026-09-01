@@ -14,6 +14,7 @@
 
 ### Feature
 
+- Feature: emit canonical Core diagnostics as column-precise GitHub annotations and a SARIF 2.1.0 report path for code-scanning uploads.
 - Feature: surface `requireDocumentTitle` (ZMD019) violations in GitHub Action annotations.
 - Feature: surface `requireSingleMain` (ZMD020) violations in GitHub Action annotations.
 - Feature: surface `ariaValidAttrValue` (ZMD021) violations in GitHub Action annotations.

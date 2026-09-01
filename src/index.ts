@@ -1,48 +1,72 @@
 import * as core from "@actions/core";
+import * as fs from "fs";
 import { glob } from "glob";
-
-type ZemdomuModule = typeof import("zemdomu");
-
-let ProjectLinter: ZemdomuModule["ProjectLinter"];
-try {
-  ({ ProjectLinter } = require("../../ZemDomu-Core/out") as ZemdomuModule);
-} catch {
-  ({ ProjectLinter } = require("zemdomu") as ZemdomuModule);
-}
-
-type RulesConfig = Record<string, "error" | "warning" | "off">;
+import * as path from "path";
+import {
+  diagnosticsToSarif,
+  ProjectLinter,
+  type ZemDomuDiagnostic,
+} from "zemdomu";
 
 const DOCS_BASE_URL = "https://zemdomu.dev/docs/";
+const SARIF_FILE_NAME = "zemdomu.sarif";
 
-const DEFAULT_RULES: RulesConfig = {
-  requireSectionHeading: "error",
-  enforceHeadingOrder: "error",
-  singleH1: "error",
-  requireAltText: "error",
-  requireLabelForFormControls: "error",
-  enforceListNesting: "error",
-  requireLinkText: "error",
-  requireTableCaption: "error",
-  preventEmptyInlineTags: "warning",
-  requireHrefOnAnchors: "error",
-  requireButtonText: "error",
-  requireIframeTitle: "error",
-  requireHtmlLang: "error",
-  requireImageInputAlt: "error",
-  requireNavLinks: "warning",
-  uniqueIds: "error",
-  noTabindexGreaterThanZero: "warning",
-  preventZemdomuPlaceholders: "warning",
-  requireDocumentTitle: "error",
-  requireSingleMain: "error",
-  ariaValidAttrValue: "error",
-};
-
-const DOCS_RULES = new Set(Object.keys(DEFAULT_RULES));
-
-function docsUrlForRule(rule: string): string | null {
-  if (!DOCS_RULES.has(rule)) return null;
+function docsUrlForRule(rule: string): string {
   return `${DOCS_BASE_URL}${encodeURIComponent(rule)}`;
+}
+
+function annotationMessage(diagnostic: ZemDomuDiagnostic): string {
+  const lines = [diagnostic.message];
+  if (diagnostic.page) lines.push(`Page: ${diagnostic.page}`);
+  if (diagnostic.componentPath?.length) {
+    lines.push(`Component path: ${diagnostic.componentPath.join(" -> ")}`);
+  }
+  for (const related of diagnostic.relatedLocations ?? []) {
+    const location = `${related.source.file}:${related.source.line + 1}:${related.source.column + 1}`;
+    lines.push(
+      `Related: ${location}${related.message ? ` - ${related.message}` : ""}`
+    );
+  }
+  if (diagnostic.suggestion) {
+    lines.push(`Suggestion: ${diagnostic.suggestion.message}`);
+  }
+  lines.push(`(${diagnostic.code}) See ${docsUrlForRule(diagnostic.rule)}`);
+  return lines.join("\n");
+}
+
+function annotationProperties(
+  diagnostic: ZemDomuDiagnostic
+): core.AnnotationProperties {
+  return {
+    file: diagnostic.source.file,
+    startLine: diagnostic.source.line + 1,
+    startColumn: diagnostic.source.column + 1,
+    title: `${diagnostic.code}: ${diagnostic.rule}`,
+  };
+}
+
+function emitAnnotation(diagnostic: ZemDomuDiagnostic): void {
+  const message = annotationMessage(diagnostic);
+  const properties = annotationProperties(diagnostic);
+  if (diagnostic.severity === "warning") {
+    core.warning(message, properties);
+  } else if (diagnostic.severity === "info") {
+    core.notice(message, properties);
+  } else {
+    core.error(message, properties);
+  }
+}
+
+function writeSarif(diagnostics: readonly ZemDomuDiagnostic[]): void {
+  const outputDirectory = process.env.RUNNER_TEMP?.trim() || process.cwd();
+  const sarifPath = path.resolve(outputDirectory, SARIF_FILE_NAME);
+  fs.writeFileSync(
+    sarifPath,
+    `${JSON.stringify(diagnosticsToSarif(diagnostics), null, 2)}\n`,
+    "utf8"
+  );
+  core.setOutput("sarif", sarifPath);
+  core.info(`Wrote SARIF report to ${sarifPath}`);
 }
 
 async function run(): Promise<void> {
@@ -74,29 +98,22 @@ async function run(): Promise<void> {
     const linter = new ProjectLinter({
       crossComponentAnalysis: cross,
       crossComponentDepth: depth,
-      rules: DEFAULT_RULES,
     });
-    const results = await linter.lintFiles(Array.from(files));
+    const diagnostics = (
+      await linter.lintPageDiagnostics(Array.from(files))
+    ).filter(
+      (diagnostic) =>
+        !(
+          diagnostic.rule === "parseError" &&
+          diagnostic.source.file.toLowerCase().endsWith(".html")
+        )
+    );
+    writeSarif(diagnostics);
+
     let hasIssues = false;
-    for (const [file, issues] of results.entries()) {
-      for (const issue of issues) {
-        if (issue.rule === "parseError" && file.toLowerCase().endsWith(".html")) {
-          continue;
-        }
-        const severity = issue.severity === "warning" ? "warning" : "error";
-        const log = severity === "warning" ? core.warning : core.error;
-        const issueWithCode = issue as { code?: string; rule: string };
-        const ruleId = issueWithCode.code ?? issue.rule;
-        const docsUrl = docsUrlForRule(issue.rule);
-        const message = docsUrl
-          ? `${issue.message} (${ruleId}) See ${docsUrl}`
-          : `${issue.message} (${ruleId})`;
-        log(message, {
-          file,
-          startLine: issue.line + 1,
-        });
-        hasIssues = true;
-      }
+    for (const diagnostic of diagnostics) {
+      emitAnnotation(diagnostic);
+      hasIssues = true;
     }
     if (hasIssues) {
       core.setFailed("Semantic-HTML linting found issues; see annotations above.");

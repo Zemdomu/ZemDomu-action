@@ -33,6 +33,7 @@ workflows and complements rendered-DOM scanners.
 
 - Lints HTML, JSX, TSX, and Vue templates in CI.
 - Surfaces findings as GitHub Actions annotations.
+- Generates a SARIF 2.1.0 report for GitHub code-scanning uploads.
 - Fails the job when issues are detected.
 - Supports bounded cross-component analysis for local React and Vue imports.
 - Flags supported semantic HTML and accessibility source patterns.
@@ -65,8 +66,21 @@ jobs:
 
 ## Outputs
 
+- `sarif`: absolute path to the generated SARIF 2.1.0 report.
+
 The action reports findings through GitHub Actions annotations and fails the
-job if issues are detected.
+job if issues are detected. Upload the same canonical findings to code scanning
+even when the ZemDomu step reports issues:
+
+```yaml
+- id: zemdomu
+  continue-on-error: true
+  uses: Zemdomu/ZemDomu-action@main
+- if: always()
+  uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: ${{ steps.zemdomu.outputs.sarif }}
+```
 
 ## Example
 
