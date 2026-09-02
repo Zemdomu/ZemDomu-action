@@ -11,6 +11,24 @@ Use these static source checks before runtime and manual accessibility testing,
 not instead of them. A clean Action run does not establish accessibility or
 WCAG conformance.
 
+## Quick Start
+
+Add one versioned step to a pull-request workflow:
+
+```yaml
+name: ZemDomu Semantic Accessibility Checks
+on: [pull_request]
+
+jobs:
+  zemdomu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Zemdomu/ZemDomu-action@v0.3.7
+```
+
+The default scan includes `**/*.{html,jsx,tsx,vue}`.
+
 ## What It Is
 
 The ZemDomu GitHub Action runs the shared ZemDomu Core engine inside GitHub
@@ -38,44 +56,33 @@ workflows and complements rendered-DOM scanners.
 - Supports bounded cross-component analysis for local React and Vue imports.
 - Flags supported semantic HTML and accessibility source patterns.
 
-## Quick Start
+## Configuration
 
-```yaml
-name: ZemDomu Semantic Accessibility Checks
-on: [pull_request]
-
-jobs:
-  zemdomu:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: Zemdomu/ZemDomu-action@main
-        with:
-          files: |
-            **/*.{html,jsx,tsx,vue}
-```
-
-## Inputs
-
-- `files`: glob patterns of files to lint
-  Default: `**/*.{html,jsx,tsx,vue}`
-- `crossComponentAnalysis`: enable cross-component analysis
-  Default: `false`
-- `crossComponentDepth`: maximum depth for cross-component analysis
-  Default: `3`
+| Input | Default | Purpose |
+| --- | --- | --- |
+| `files` | `**/*.{html,jsx,tsx,vue}` | One or more newline-, comma-, or space-separated glob patterns to analyze. |
+| `crossComponentAnalysis` | `false` | Set to `true` to follow statically resolvable local React and Vue imports. |
+| `crossComponentDepth` | `3` | Maximum local import depth when cross-component analysis is enabled. |
 
 ## Outputs
 
 - `sarif`: absolute path to the generated SARIF 2.1.0 report.
 
-The action reports findings through GitHub Actions annotations and fails the
-job if issues are detected. Upload the same canonical findings to code scanning
-even when the ZemDomu step reports issues:
+## Annotations and Failure Behavior
+
+ZemDomu maps canonical `error`, `warning`, and `info` severities to GitHub error,
+warning, and notice annotations. The step fails when any supported finding is
+reported; there is currently no separate Action-level severity threshold.
+Invalid input or an analysis error also fails the step.
+
+The `sarif` output is written even when analysis reports findings. To upload the
+same canonical results to GitHub code scanning, let the ZemDomu step continue
+long enough for the upload step to run:
 
 ```yaml
 - id: zemdomu
   continue-on-error: true
-  uses: Zemdomu/ZemDomu-action@main
+  uses: Zemdomu/ZemDomu-action@v0.3.7
 - if: always()
   uses: github/codeql-action/upload-sarif@v3
   with:
@@ -87,7 +94,7 @@ even when the ZemDomu step reports issues:
 Run only on frontend folders and enable cross-component analysis:
 
 ```yaml
-- uses: Zemdomu/ZemDomu-action@main
+- uses: Zemdomu/ZemDomu-action@v0.3.7
   with:
     files: |
       apps/web/**/*.{html,jsx,tsx,vue}

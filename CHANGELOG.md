@@ -18,6 +18,7 @@
 - Feature: surface `requireDocumentTitle` (ZMD019) violations in GitHub Action annotations.
 - Feature: surface `requireSingleMain` (ZMD020) violations in GitHub Action annotations.
 - Feature: surface `ariaValidAttrValue` (ZMD021) violations in GitHub Action annotations.
+- Feature: add Marketplace branding, versioned first-screen onboarding, and tested metadata, input, output, and failure-behavior documentation.
 - Feature: add npm funding metadata linking to Buy Me a Coffee for `npm fund`.
 
 ### Docs

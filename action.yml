@@ -1,5 +1,5 @@
 name: 'ZemDomu GitHub Action'
-description: 'Annotate pull requests with supported ZemDomu semantic accessibility findings'
+description: 'Find semantic HTML and accessibility issues in HTML, JSX, TSX, and Vue pull requests'
 author: 'Zacharias Eryd Berlin'
 inputs:
   files:
@@ -20,3 +20,6 @@ outputs:
 runs:
   using: 'node20'
   main: 'dist/index.js'
+branding:
+  icon: 'check-circle'
+  color: 'blue'

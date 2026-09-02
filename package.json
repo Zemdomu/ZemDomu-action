@@ -13,7 +13,7 @@
     "build:ncc": "ncc build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
     "prepare": "npm run build",
-    "test": "npm run build && node tests/run-action.test.js && node tests/multiple-h1-action.test.js && node tests/canonical-diagnostics-action.test.js"
+    "test": "npm run build && node tests/run-action.test.js && node tests/multiple-h1-action.test.js && node tests/canonical-diagnostics-action.test.js && node tests/marketplace-metadata.test.js"
   },
   "dependencies": {
     "@actions/core": "^2.0.3",
@@ -25,7 +25,8 @@
     "@types/node": "^22.15.17",
     "@vercel/ncc": "^0.38.3",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "yaml": "^2.9.0"
   },
   "overrides": {
     "@isaacs/brace-expansion": "5.0.6",
