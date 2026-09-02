@@ -26,6 +26,10 @@
   approved ZemDomu GitHub Action name, pull-request annotation outcome,
   supported cross-component scope, and static-analysis limits.
 
+### Chore
+
+- Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.
+
 ## 0.3.5
 
 ### Feature
