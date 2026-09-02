@@ -20,7 +20,7 @@ assert.equal(manifest.inputs.files.default, "**/*.{html,jsx,tsx,vue}");
 assert.equal(manifest.inputs.crossComponentAnalysis.default, "false");
 assert.equal(manifest.inputs.crossComponentDepth.default, "3");
 assert.equal(manifest.outputs.sarif.description.includes("SARIF 2.1.0"), true);
-assert.equal(manifest.runs.using, "node20");
+assert.equal(manifest.runs.using, "node24");
 assert.equal(manifest.runs.main, "dist/index.js");
 assert.deepEqual(manifest.branding, { icon: "check-circle", color: "blue" });
 assert.ok(fs.existsSync(path.join(packageRoot, manifest.runs.main)), "bundled runtime exists");
@@ -33,6 +33,7 @@ for (const input of Object.keys(manifest.inputs)) {
 assert.match(readme, /steps\.zemdomu\.outputs\.sarif/);
 assert.match(readme, /step fails when any supported finding is\s+reported/);
 assert.match(readme, /no separate Action-level severity threshold/);
+assert.match(readme, /steps\.zemdomu\.outcome == 'failure'/);
 
 const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "zemdomu-marketplace-"));
 const validFile = path.join(fixture, "valid.html");

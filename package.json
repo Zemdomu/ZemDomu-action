@@ -1,6 +1,6 @@
 {
   "name": "zemdomu-action",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "GitHub Action that runs ZemDomu Core semantic accessibility checks and reports pull-request annotations",
   "funding": "https://buymeacoffee.com/zemdomu",
   "main": "dist/index.js",

@@ -1,5 +1,23 @@
 ## Unreleased
 
+### Feature
+
+- Feature: emit canonical Core diagnostics as column-precise GitHub annotations and a SARIF 2.1.0 report path for code-scanning uploads.
+- Feature: add Marketplace branding, versioned first-screen onboarding, and tested metadata, input, output, and failure-behavior documentation.
+
+### Docs
+
+- Docs: align Action metadata, workflow examples, and README copy with the
+  approved ZemDomu GitHub Action name, pull-request annotation outcome,
+  supported cross-component scope, and static-analysis limits.
+
+### Chore
+
+- Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.
+- Chore: run the Action on GitHub's Node.js 24 runtime.
+
+## 0.3.6
+
 ### Security
 
 - Security: update the undici override and lockfile to patched GitHub Action runtime dependencies.
@@ -14,22 +32,14 @@
 
 ### Feature
 
-- Feature: emit canonical Core diagnostics as column-precise GitHub annotations and a SARIF 2.1.0 report path for code-scanning uploads.
 - Feature: surface `requireDocumentTitle` (ZMD019) violations in GitHub Action annotations.
 - Feature: surface `requireSingleMain` (ZMD020) violations in GitHub Action annotations.
 - Feature: surface `ariaValidAttrValue` (ZMD021) violations in GitHub Action annotations.
-- Feature: add Marketplace branding, versioned first-screen onboarding, and tested metadata, input, output, and failure-behavior documentation.
 - Feature: add npm funding metadata linking to Buy Me a Coffee for `npm fund`.
-
-### Docs
-
-- Docs: align Action metadata, workflow examples, and README copy with the
-  approved ZemDomu GitHub Action name, pull-request annotation outcome,
-  supported cross-component scope, and static-analysis limits.
 
 ### Chore
 
-- Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.
+- Chore: bundle ZemDomu Core 1.3.20 and refresh the tracked GitHub Action distribution.
 
 ## 0.3.5
 

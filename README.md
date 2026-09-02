@@ -83,10 +83,13 @@ long enough for the upload step to run:
 - id: zemdomu
   continue-on-error: true
   uses: Zemdomu/ZemDomu-action@v0.3.7
-- if: always()
+- if: always() && steps.zemdomu.outputs.sarif != ''
   uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: ${{ steps.zemdomu.outputs.sarif }}
+- name: Preserve the ZemDomu result
+  if: steps.zemdomu.outcome == 'failure'
+  run: exit 1
 ```
 
 ## Example
