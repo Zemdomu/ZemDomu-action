@@ -12,6 +12,8 @@
     "build:tsc": "tsc",
     "build:ncc": "ncc build src/index.ts --license licenses.txt -o dist",
     "build": "npm run clean && npm run build:ncc",
+    "audit:production": "npm audit --omit=dev --audit-level=high",
+    "audit:all": "npm audit --audit-level=high",
     "prepare": "npm run build",
     "test": "npm run build && node tests/run-action.test.js && node tests/multiple-h1-action.test.js && node tests/canonical-diagnostics-action.test.js && node tests/marketplace-metadata.test.js"
   },
