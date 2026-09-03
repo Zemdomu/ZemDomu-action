@@ -1,12 +1,12 @@
 import * as core from "@actions/core";
 import * as fs from "fs";
-import { glob } from "glob";
 import * as path from "path";
 import {
   diagnosticsToSarif,
   ProjectLinter,
   type ZemDomuDiagnostic,
 } from "zemdomu";
+import { discoverFiles, parseGlobPatterns } from "./file-discovery";
 
 const DOCS_BASE_URL = "https://zemdomu.dev/docs/";
 const SARIF_FILE_NAME = "zemdomu.sarif";
@@ -72,16 +72,9 @@ function writeSarif(diagnostics: readonly ZemDomuDiagnostic[]): void {
 async function run(): Promise<void> {
   try {
     const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx,vue}";
-    const patterns = patternsInput
-      .split(/\r?\n/)
-      .flatMap((p) => p.split(/[, ]+/))
-      .filter(Boolean);
+    const patterns = parseGlobPatterns(patternsInput);
 
-    const files = new Set<string>();
-    for (const pattern of patterns) {
-      const matches = await glob(pattern, { nodir: true });
-      for (const m of matches) files.add(m);
-    }
+    const files = await discoverFiles(patterns);
 
     const crossInput = core.getInput("crossComponentAnalysis");
     let cross = false;
@@ -100,7 +93,7 @@ async function run(): Promise<void> {
       crossComponentDepth: depth,
     });
     const diagnostics = (
-      await linter.lintPageDiagnostics(Array.from(files))
+      await linter.lintPageDiagnostics(files)
     ).filter(
       (diagnostic) =>
         !(

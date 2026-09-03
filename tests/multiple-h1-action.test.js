@@ -6,8 +6,10 @@ const { spawnSync } = require('child_process');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'zd-action-'));
 const badFile = path.join(tmp, 'bad.html');
 fs.writeFileSync(badFile, '<h1>One</h1><h1>Two</h1>');
+const actionPath = process.env.ZEMDOMU_ACTION_PATH ||
+  path.join(__dirname, '..', 'dist', 'index.js');
 
-const result = spawnSync('node', [path.join(__dirname, '..', 'dist', 'index.js')], {
+const result = spawnSync('node', [actionPath], {
   cwd: tmp,
   env: { ...process.env, INPUT_FILES: '*.html' },
   encoding: 'utf8'

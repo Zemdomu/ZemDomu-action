@@ -15,6 +15,11 @@
 
 - Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.
 - Chore: run the Action on GitHub's Node.js 24 runtime.
+- Chore: remove the unused `@actions/github` runtime dependency from the bundled Action graph.
+
+### Bugfix
+
+- Bugfix: make file discovery deterministic across path separators while excluding hidden files, dependencies, directories, and symlink traversal.
 
 ## 0.3.6
 

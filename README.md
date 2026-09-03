@@ -60,7 +60,7 @@ workflows and complements rendered-DOM scanners.
 
 | Input | Default | Purpose |
 | --- | --- | --- |
-| `files` | `**/*.{html,jsx,tsx,vue}` | One or more newline-, comma-, or space-separated glob patterns to analyze. |
+| `files` | `**/*.{html,jsx,tsx,vue}` | One or more newline-, comma-, or space-separated glob patterns; brace commas are preserved, both path separators are accepted, matches are sorted and deduplicated, and hidden files, dependencies, directories, and symlink traversal are excluded. |
 | `crossComponentAnalysis` | `false` | Set to `true` to follow statically resolvable local React and Vue imports. |
 | `crossComponentDepth` | `3` | Maximum local import depth when cross-component analysis is enabled. |
 

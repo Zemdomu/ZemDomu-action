@@ -48,7 +48,10 @@ function diagnosticShape(diagnostic) {
 
   const action = spawnSync(
     process.execPath,
-    [path.join(__dirname, "..", "dist", "index.js")],
+    [
+      process.env.ZEMDOMU_ACTION_PATH ||
+        path.join(__dirname, "..", "dist", "index.js"),
+    ],
     {
       cwd: tmp,
       env: {
