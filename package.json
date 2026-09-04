@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.17",
-    "@vercel/ncc": "^0.38.3",
+    "@vercel/ncc": "^0.45.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.2",
     "yaml": "^2.9.0"
