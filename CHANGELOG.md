@@ -11,6 +11,10 @@
   approved ZemDomu GitHub Action name, pull-request annotation outcome,
   supported cross-component scope, and static-analysis limits.
 
+### Security
+
+- Security: add a fail-closed public-repository policy and mirror gate that reject unapproved Markdown, internal agent material, local credentials, and secret-shaped content before publication.
+
 ### Chore
 
 - Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.

@@ -242471,6 +242471,60 @@ function isHtmlVueTemplate(block) {
 
 /***/ }),
 
+/***/ 2045:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseGlobPatterns = parseGlobPatterns;
+exports.discoverFiles = discoverFiles;
+const glob_1 = __nccwpck_require__(1363);
+const comparePaths = (left, right) => left < right ? -1 : left > right ? 1 : 0;
+function normalizeGlobPattern(pattern) {
+    return pattern.replace(/\\/g, '/');
+}
+function parseGlobPatterns(input) {
+    const patterns = [];
+    let current = '';
+    let braceDepth = 0;
+    for (const character of input) {
+        if (character === '{')
+            braceDepth++;
+        if (character === '}' && braceDepth > 0)
+            braceDepth--;
+        if (braceDepth === 0 && (character === ',' || /\s/.test(character))) {
+            if (current)
+                patterns.push(current);
+            current = '';
+        }
+        else {
+            current += character;
+        }
+    }
+    if (current)
+        patterns.push(current);
+    return patterns;
+}
+async function discoverFiles(patterns) {
+    const files = new Set();
+    for (const rawPattern of patterns) {
+        const matches = await (0, glob_1.glob)(normalizeGlobPattern(rawPattern), {
+            dot: false,
+            follow: false,
+            ignore: '**/node_modules/**',
+            nodir: true,
+        });
+        matches.sort(comparePaths);
+        for (const match of matches)
+            files.add(match.replace(/\\/g, '/'));
+    }
+    return Array.from(files).sort(comparePaths);
+}
+
+
+/***/ }),
+
 /***/ 9407:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -242512,9 +242566,9 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const fs = __importStar(__nccwpck_require__(9896));
-const glob_1 = __nccwpck_require__(1363);
 const path = __importStar(__nccwpck_require__(6928));
 const zemdomu_1 = __nccwpck_require__(4464);
+const file_discovery_1 = __nccwpck_require__(2045);
 const DOCS_BASE_URL = "https://zemdomu.dev/docs/";
 const SARIF_FILE_NAME = "zemdomu.sarif";
 function docsUrlForRule(rule) {
@@ -242568,16 +242622,8 @@ function writeSarif(diagnostics) {
 async function run() {
     try {
         const patternsInput = core.getInput("files") || "**/*.{html,jsx,tsx,vue}";
-        const patterns = patternsInput
-            .split(/\r?\n/)
-            .flatMap((p) => p.split(/[, ]+/))
-            .filter(Boolean);
-        const files = new Set();
-        for (const pattern of patterns) {
-            const matches = await (0, glob_1.glob)(pattern, { nodir: true });
-            for (const m of matches)
-                files.add(m);
-        }
+        const patterns = (0, file_discovery_1.parseGlobPatterns)(patternsInput);
+        const files = await (0, file_discovery_1.discoverFiles)(patterns);
         const crossInput = core.getInput("crossComponentAnalysis");
         let cross = false;
         if (crossInput) {
@@ -242595,7 +242641,7 @@ async function run() {
             crossComponentAnalysis: cross,
             crossComponentDepth: depth,
         });
-        const diagnostics = (await linter.lintPageDiagnostics(Array.from(files))).filter((diagnostic) => !(diagnostic.rule === "parseError" &&
+        const diagnostics = (await linter.lintPageDiagnostics(files)).filter((diagnostic) => !(diagnostic.rule === "parseError" &&
             diagnostic.source.file.toLowerCase().endsWith(".html")));
         writeSarif(diagnostics);
         let hasIssues = false;
