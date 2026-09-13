@@ -131,4 +131,6 @@ npm test
 
 ## License
 
-MIT (c) 2025 Zacharias Eryd Berlin
+The ZemDomu GitHub Action is open source under the MIT License.
+
+Copyright (c) 2025 Zacharias Eryd Berlin
