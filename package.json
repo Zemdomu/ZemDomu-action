@@ -2,6 +2,8 @@
   "name": "zemdomu-action",
   "version": "0.3.6",
   "description": "GitHub Action that runs ZemDomu Core semantic accessibility checks and reports pull-request annotations",
+  "author": "Zacharias Eryd Berlin",
+  "license": "MIT",
   "funding": "https://buymeacoffee.com/zemdomu",
   "main": "dist/index.js",
   "files": [
