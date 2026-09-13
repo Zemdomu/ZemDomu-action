@@ -24,6 +24,11 @@ assert.equal(manifest.runs.using, "node24");
 assert.equal(manifest.runs.main, "dist/index.js");
 assert.deepEqual(manifest.branding, { icon: "check-circle", color: "blue" });
 assert.ok(fs.existsSync(path.join(packageRoot, manifest.runs.main)), "bundled runtime exists");
+assert.doesNotMatch(
+  fs.readFileSync(path.join(packageRoot, manifest.runs.main), "utf8"),
+  /[ \t]+$/m,
+  "bundled runtime has no trailing whitespace",
+);
 
 assert.match(readme, /uses: Zemdomu\/ZemDomu-action@v0\.3\.7/);
 assert.doesNotMatch(readme, /uses: Zemdomu\/ZemDomu-action@main/);

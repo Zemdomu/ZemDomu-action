@@ -17,6 +17,7 @@
 
 ### Chore
 
+- Chore: align file discovery on the same supported glob major as Core while preserving the Action input contract.
 - Chore: add the tracked MIT license and explicit package ownership metadata.
 - Chore: publish the exact verified Action bundle with matching changelog notes, public tag, and non-draft GitHub release through fail-closed release automation.
 - Chore: run the Action on GitHub's Node.js 24 runtime.
