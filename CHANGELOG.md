@@ -7,6 +7,7 @@
 
 ### Docs
 
+- Docs: correct public workflow examples to the existing `v0.3.6` Action release tag.
 - Docs: align Action metadata, workflow examples, and README copy with the
   approved ZemDomu GitHub Action name, pull-request annotation outcome,
   supported cross-component scope, and static-analysis limits.

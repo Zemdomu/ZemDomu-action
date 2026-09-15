@@ -30,7 +30,8 @@ assert.doesNotMatch(
   "bundled runtime has no trailing whitespace",
 );
 
-assert.match(readme, /uses: Zemdomu\/ZemDomu-action@v0\.3\.7/);
+const version = require(path.join(packageRoot, "package.json")).version;
+assert.ok(readme.includes(`uses: Zemdomu/ZemDomu-action@v${version}`));
 assert.doesNotMatch(readme, /uses: Zemdomu\/ZemDomu-action@main/);
 for (const input of Object.keys(manifest.inputs)) {
   assert.ok(readme.includes(`\`${input}\``), `README documents ${input}`);

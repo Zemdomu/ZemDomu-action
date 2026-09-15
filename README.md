@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Zemdomu/ZemDomu-action@v0.3.7
+      - uses: Zemdomu/ZemDomu-action@v0.3.6
 ```
 
 The default scan includes `**/*.{html,jsx,tsx,vue}`.
@@ -82,7 +82,7 @@ long enough for the upload step to run:
 ```yaml
 - id: zemdomu
   continue-on-error: true
-  uses: Zemdomu/ZemDomu-action@v0.3.7
+  uses: Zemdomu/ZemDomu-action@v0.3.6
 - if: always() && steps.zemdomu.outputs.sarif != ''
   uses: github/codeql-action/upload-sarif@v3
   with:
@@ -97,7 +97,7 @@ long enough for the upload step to run:
 Run only on frontend folders and enable cross-component analysis:
 
 ```yaml
-- uses: Zemdomu/ZemDomu-action@v0.3.7
+- uses: Zemdomu/ZemDomu-action@v0.3.6
   with:
     files: |
       apps/web/**/*.{html,jsx,tsx,vue}
