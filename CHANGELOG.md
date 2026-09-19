@@ -27,6 +27,7 @@
 ### Bugfix
 
 - Bugfix: make file discovery deterministic across path separators while excluding hidden files, dependencies, directories, and symlink traversal.
+- Bugfix: ignore imported stylesheets and other non-code assets during cross-component analysis instead of reporting parser errors for them.
 
 ## 0.3.6
 

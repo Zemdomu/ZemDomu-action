@@ -25,12 +25,12 @@
     "audit:production": "npm audit --omit=dev --audit-level=high",
     "audit:all": "npm audit --audit-level=high",
     "prepare": "npm run build",
-    "test": "npm run build && node tests/run-action.test.js && node tests/multiple-h1-action.test.js && node tests/canonical-diagnostics-action.test.js && node tests/file-discovery-action.test.js && node tests/marketplace-metadata.test.js"
+    "test": "npm run build && node tests/run-action.test.js && node tests/multiple-h1-action.test.js && node tests/cross-component-assets-action.test.js && node tests/canonical-diagnostics-action.test.js && node tests/file-discovery-action.test.js && node tests/marketplace-metadata.test.js"
   },
   "dependencies": {
     "@actions/core": "^2.0.3",
     "glob": "^11.1.0",
-    "zemdomu": "^1.3.21"
+    "zemdomu": "^1.4.4"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",

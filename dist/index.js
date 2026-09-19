@@ -235145,9 +235145,12 @@ class ComponentPathResolver {
                         const pattern = `**/${prefix}/**/*.{tsx,jsx,ts,js,vue}`;
                         const files = await (0, glob_1.glob)(pattern, {
                             cwd: this.rootDir,
+                            dot: false,
+                            follow: false,
                             ignore: '**/node_modules/**',
                             nodir: true,
                         });
+                        files.sort((left, right) => left < right ? -1 : left > right ? 1 : 0);
                         alias = new Map();
                         for (const relPath of files.slice(0, this.aliasFileLimit)) {
                             const rel = path.resolve(this.rootDir, relPath).replace(/\\/g, '/');
@@ -235183,9 +235186,12 @@ class ComponentPathResolver {
                             }
                             const matches = await (0, glob_1.glob)(ptn, {
                                 cwd: this.rootDir,
+                                dot: false,
+                                follow: false,
                                 ignore: '**/node_modules/**',
                                 nodir: true,
                             });
+                            matches.sort((left, right) => left < right ? -1 : left > right ? 1 : 0);
                             if (matches.length) {
                                 result = path.resolve(this.rootDir, matches[0]);
                                 this.resolveCache.set(pKey, result);
@@ -242236,6 +242242,9 @@ const path_1 = __importDefault(__nccwpck_require__(6928));
 const ts = __importStar(__nccwpck_require__(5672));
 const vue_sfc_1 = __nccwpck_require__(5513);
 const EXTS = [".tsx", ".ts", ".jsx", ".js", ".vue"];
+function isSupportedSourceFile(filePath) {
+    return EXTS.includes(path_1.default.extname(filePath).toLowerCase());
+}
 function scriptKindForFile(filePath) {
     switch (path_1.default.extname(filePath).toLowerCase()) {
         case ".tsx":
@@ -242251,8 +242260,11 @@ function scriptKindForFile(filePath) {
     }
 }
 function resolveWithExtensions(base) {
-    if (fs_1.default.existsSync(base) && fs_1.default.statSync(base).isFile())
+    if (isSupportedSourceFile(base) &&
+        fs_1.default.existsSync(base) &&
+        fs_1.default.statSync(base).isFile()) {
         return base;
+    }
     for (const ext of EXTS) {
         const p = base + ext;
         if (fs_1.default.existsSync(p) && fs_1.default.statSync(p).isFile())
