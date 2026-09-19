@@ -1,6 +1,6 @@
 {
   "name": "zemdomu-action",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "GitHub Action that runs ZemDomu Core semantic accessibility checks and reports pull-request annotations",
   "repository": {
     "type": "git",

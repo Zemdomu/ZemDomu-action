@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.3.7
+
 ### Feature
 
 - Feature: emit canonical Core diagnostics as column-precise GitHub annotations and a SARIF 2.1.0 report path for code-scanning uploads.
