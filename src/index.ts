@@ -1,4 +1,4 @@
-import * as core from "@actions/core";
+import * as core from "./runner";
 import * as fs from "fs";
 import * as path from "path";
 import {

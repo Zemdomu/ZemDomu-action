@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Security
+
+- Security: remove the Action's direct glob and HTTP-client dependency chains by using Node.js file discovery and a tested GitHub runner adapter, preserving annotations and SARIF outputs.
+- Security: update the bundled engine to Core 2.0.0, removing its runtime glob dependency chain.
+
 ## 0.3.7
 
 ### Feature
