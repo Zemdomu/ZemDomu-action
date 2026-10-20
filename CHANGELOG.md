@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.3.8
+
 ### Security
 
 - Security: remove the Action's direct glob and HTTP-client dependency chains by using Node.js file discovery and a tested GitHub runner adapter, preserving annotations and SARIF outputs.
