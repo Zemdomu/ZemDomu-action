@@ -1,5 +1,7 @@
 # ZemDomu GitHub Action
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Zemdomu/ZemDomu-action/badge)](https://scorecard.dev/viewer/?uri=github.com/Zemdomu/ZemDomu-action)
+
 > Pull-request annotations for supported semantic accessibility defects.
 
 The ZemDomu GitHub Action runs the shared ZemDomu Core rules in CI and surfaces
