@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest an improvement to ZemDomu GitHub Action.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. For feedback spanning ZemDomu products, use https://github.com/Zemdomu/ZemDomu/discussions. Keep examples free of secrets, private source, and customer data.
+  - type: textarea
+    id: need
+    attributes:
+      label: Problem and need
+      description: What are you trying to do, who is affected, and what prevents it today?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: Describe the behavior you need, affected syntax or framework, and any limits. Include a small sanitized example if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and workarounds
+      description: What have you tried? Describe any workaround or related tools.

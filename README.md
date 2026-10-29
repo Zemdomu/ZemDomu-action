@@ -129,6 +129,12 @@ npm test
 - ZemDomu Core: https://www.npmjs.com/package/zemdomu
 - Website and docs: https://zemdomu.dev/
 
+## Support
+
+If the ZemDomu Action helps you, you can [star the repository](https://github.com/ZemDomu/ZemDomu-action/stargazers).
+Report bugs with a minimal reproduction in [Action issues](https://github.com/ZemDomu/ZemDomu-action/issues), with secrets and private source removed.
+For feedback across ZemDomu products, use [Meta discussions](https://github.com/Zemdomu/ZemDomu/discussions).
+
 ## License
 
 The ZemDomu GitHub Action is open source under the MIT License.

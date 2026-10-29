@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a reproducible problem with ZemDomu GitHub Action.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues before opening a report. Everything here is public: remove tokens, credentials, private source, customer data, and identifying paths from code and logs. Follow the [security policy](https://github.com/Zemdomu/ZemDomu-action/security/policy) for suspected vulnerabilities.
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions and environment
+      description: Action tag or commit SHA, runner OS, and Node.js version if relevant. Include the bundled Core version if known.
+    validations:
+      required: true
+  - type: textarea
+    id: syntax
+    attributes:
+      label: Syntax and framework
+      description: HTML, JSX, TSX, or Vue; include the framework version and whether cross-component analysis is enabled.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal sanitized reproduction
+      description: Include the smallest workflow job, Action inputs, source files, and redacted log or annotation needed to reproduce the problem. Include permissions when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: Describe the result you expected and why, including a rule ID if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the diagnostic, error, or missing result. Redact sensitive data from logs.
+    validations:
+      required: true

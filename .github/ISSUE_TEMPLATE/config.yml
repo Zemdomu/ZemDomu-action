@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Cross-product questions and feedback
+    url: https://github.com/Zemdomu/ZemDomu/discussions
+    about: Discuss questions or ideas spanning several ZemDomu products.
