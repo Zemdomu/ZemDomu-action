@@ -1,5 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+import { isDeepStrictEqual } from 'node:util';
+
+// Resolve through pinned c8's own dependencies, rather than adding a product dependency.
+const require = createRequire(import.meta.url);
+const c8Require = createRequire(require.resolve('c8/package.json'));
+const { createCoverageMap } = c8Require('istanbul-lib-coverage');
 
 function sourceFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -98,4 +105,19 @@ export function verifySourceCoverage({ projectRoot, coverage }) {
   const missing = expected.filter(file => !seen.has(file));
   if (missing.length) throw new Error(`Missing source coverage: ${missing.join(', ')}`);
   return expected.map(file => path.relative(root, file));
+}
+
+export function verifyCoverageSummary({ projectRoot, coverage, summary }) {
+  const sources = verifySourceCoverage({ projectRoot, coverage });
+  const map = createCoverageMap(coverage);
+  const expected = { total: map.getCoverageSummary().toJSON() };
+  for (const file of map.files()) {
+    expected[file] = map.fileCoverageFor(file).toSummary().toJSON();
+  }
+  // Includes per-file/aggregate counts, skipped values and Istanbul's exact
+  // percentages, including line aggregation and empty-metric representation.
+  if (!isDeepStrictEqual(summary, expected)) {
+    throw new Error('Coverage summary does not match detailed source counters');
+  }
+  return sources;
 }
