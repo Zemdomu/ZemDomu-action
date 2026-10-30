@@ -2,6 +2,7 @@
 
 ### Security
 
+- Security: update the bundled engine to Core 2.0.1 to prevent crafted script URLs and component paths from causing excessive processing.
 - Security: provide verifiable Sigstore signatures for GitHub release downloads.
 
 ### Docs

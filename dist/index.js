@@ -203562,9 +203562,11 @@ class ComponentPathResolver {
         return null;
     }
     static normalizeKey(p) {
-        return p
-            .replace(/\\/g, '/')
-            .replace(/\/+$/, '')
+        const normalized = p.replace(/\\/g, '/');
+        let end = normalized.length;
+        while (end > 0 && normalized.charCodeAt(end - 1) === 47)
+            end -= 1;
+        return normalized.slice(0, end)
             .replace(/\.(tsx|ts|jsx|js|vue)$/, '')
             .replace(/\/index$/, '')
             .toLowerCase();
@@ -205271,7 +205273,17 @@ function hasFrameworkMountPoint(content) {
     return /<[a-z][\w:-]*\b(?=[^>]*\bid\s*=\s*["'](?:app|root|app-root|mount|__nuxt|__next|svelte)["'])[^>]*>/i.test(content);
 }
 function isFrameworkEntrySrc(src) {
-    const normalized = src.replace(/[?#].*$/, "").replace(/\\/g, "/");
+    // Preserve suffix handling on the final line without retrying a match at
+    // every query/fragment delimiter in an untrusted script URL.
+    let suffixStart = src.length;
+    for (let i = src.length - 1; i >= 0; i -= 1) {
+        const code = src.charCodeAt(i);
+        if (code === 10 || code === 13 || code === 0x2028 || code === 0x2029)
+            break;
+        if (code === 35 || code === 63)
+            suffixStart = i;
+    }
+    const normalized = src.slice(0, suffixStart).replace(/\\/g, "/");
     return /(?:^|\/)(?:src\/)?(?:main|index|app)\.(?:[cm]?[jt]sx?|vue)$/i.test(normalized);
 }
 function hasFrameworkModuleEntry(content) {
