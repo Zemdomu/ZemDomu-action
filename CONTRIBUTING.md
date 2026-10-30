@@ -74,6 +74,28 @@ Explain any checks you could not run. For a user-facing change, add an entry und
 
 Follow the [Code of Conduct](CODE_OF_CONDUCT.md) in issues, discussions, and reviews.
 
+## Measure source coverage
+
+After `npm ci`, run `npm run test:coverage`. It executes the same runner, property,
+Action-process, parity, discovery, and metadata checks as `npm test`, using direct
+TypeScript compilation with source maps in `.coverage-build/`. Normal `npm test`
+continues to rebuild and exercise the shipped ncc bundle. Coverage leaves `dist/`
+unchanged and retains ignored `coverage/tmp/` raw V8 data, detailed
+`coverage/coverage-final.json`, and `coverage/coverage-summary.json` for inspection.
+Open `coverage/index.html` for the browsable source report. The lockfile keeps
+coverage's `supports-color` and `has-flag` dependencies nested under
+`istanbul-lib-report`; hoisting them would activate an existing optional runtime
+require during ncc bundling. Preserve that tool-only placement. The committed
+bundle check catches dependency-layout changes that alter the shipped bytes.
+
+Reports cover executable first-party `src/**/*.ts`, excluding dependencies and
+test/tooling code. The guard requires every source file and real executed
+function/branch counters for the Action entry point; missing source files,
+generated-file leakage, missing or incorrect direct maps, and the former
+zero-counter bundle remap fail the command.
+Percentages describe observed statement, branch, function, and line execution;
+they do not prove complete input coverage, accessibility conformance, or security.
+
 ## Release security checks
 
 Before publishing a production release, run `npm ci`, `npm test`,

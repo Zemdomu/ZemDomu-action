@@ -47,7 +47,7 @@ fs.writeFileSync(
   validFile,
   '<html lang="en"><head><title>Valid</title></head><body><main><h1>Valid</h1></main></body></html>',
 );
-const result = spawnSync(process.execPath, [path.join(packageRoot, manifest.runs.main)], {
+const result = spawnSync(process.execPath, [process.env.ZEMDOMU_ACTION_PATH || path.join(packageRoot, manifest.runs.main)], {
   cwd: fixture,
   env: { ...process.env, INPUT_FILES: validFile, RUNNER_TEMP: fixture },
   encoding: "utf8",

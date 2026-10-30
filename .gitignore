@@ -48,3 +48,7 @@ service-account*.json
 *.sqlite
 *.sqlite3
 *.sarif
+
+# Local source coverage, direct test compilation, and raw V8 data
+.coverage-build/
+coverage/
