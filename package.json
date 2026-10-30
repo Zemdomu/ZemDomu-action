@@ -29,7 +29,7 @@
     "test:fuzz": "node --experimental-strip-types --test tests/fuzz-properties.test.js"
   },
   "dependencies": {
-    "zemdomu": "^2.0.0"
+    "zemdomu": "^2.0.1"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
