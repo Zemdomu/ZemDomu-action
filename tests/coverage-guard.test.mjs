@@ -5,7 +5,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { verifyDirectSourceMaps, verifySourceCoverage } from '../scripts/verify-source-coverage.mjs';
+import { verifyDirectSourceMaps, verifySourceCoverage, verifyCoverageSummary } from '../scripts/verify-source-coverage.mjs';
 import { runCoverage } from '../scripts/test-coverage.mjs';
 
 function fixture(action) {
@@ -24,6 +24,74 @@ function fixture(action) {
   }
   try { action(root, coverage); } finally { fs.rmSync(root, { recursive: true, force: true }); }
 }
+
+function fixtureSummary(coverage) {
+  const metric = (total, covered, pct) => ({ total, covered, skipped: 0, pct });
+  const summary = {};
+  for (const file of Object.keys(coverage)) {
+    summary[file] = {
+      lines: metric(1, 1, 100), statements: metric(1, 1, 100),
+      functions: metric(1, 1, 100), branches: metric(2, 1, 50),
+    };
+  }
+  summary.total = {
+    lines: metric(3, 3, 100), statements: metric(3, 3, 100),
+    functions: metric(3, 3, 100), branches: metric(6, 3, 50),
+    branchesTrue: metric(0, 0, 'Unknown'),
+  };
+  return summary;
+}
+
+test('coverage summary agrees with detailed line aggregation and every metric', () => {
+  fixture((root, coverage) => {
+    const summary = fixtureSummary(coverage);
+    assert.equal(verifyCoverageSummary({ projectRoot: root, coverage, summary }).length, 3);
+    const file = path.join(root, 'src', 'index.ts');
+    // Two statements on the same covered line are one covered line, even when
+    // one statement never executes. Line coverage must not sum statement counts.
+    coverage[file].statementMap[1] = structuredClone(coverage[file].statementMap[0]);
+    coverage[file].s[1] = 0;
+    summary[file].statements = { total: 2, covered: 1, skipped: 0, pct: 50 };
+    summary.total.statements = { total: 4, covered: 3, skipped: 0, pct: 75 };
+    assert.equal(verifyCoverageSummary({ projectRoot: root, coverage, summary }).length, 3);
+  });
+});
+
+test('coverage summary rejects finite contradictory percentages and altered counts', () => {
+  fixture((root, coverage) => {
+    const valid = fixtureSummary(coverage);
+    const file = path.join(root, 'src', 'index.ts');
+    for (const scope of ['total', file]) {
+      for (const metric of ['lines', 'statements', 'functions', 'branches']) {
+        const summary = structuredClone(valid);
+        summary[scope][metric].pct = metric === 'branches' ? 100 : 50;
+        assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary }), /summary does not match/);
+      }
+      const counts = structuredClone(valid);
+      counts[scope].functions.total += 1;
+      counts[scope].functions.covered += 1; // Still mathematically 100%, but false.
+      assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary: counts }), /summary does not match/);
+      const skipped = structuredClone(valid);
+      skipped[scope].statements.skipped = 1;
+      assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary: skipped }), /summary does not match/);
+    }
+  });
+});
+
+test('coverage summary rejects missing files, extra files and false empty-metric percentages', () => {
+  fixture((root, coverage) => {
+    const summary = fixtureSummary(coverage);
+    const file = path.join(root, 'src', 'index.ts');
+    delete summary[file];
+    assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary }), /summary does not match/);
+    const extra = fixtureSummary(coverage);
+    extra['unexpected.js'] = structuredClone(extra[file]);
+    assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary: extra }), /summary does not match/);
+    const empty = fixtureSummary(coverage);
+    empty.total.branchesTrue.pct = 100;
+    assert.throws(() => verifyCoverageSummary({ projectRoot: root, coverage, summary: empty }), /summary does not match/);
+  });
+});
 
 test('coverage guard accepts detailed counters for the exact source inventory', () => {
   fixture((root, coverage) => {

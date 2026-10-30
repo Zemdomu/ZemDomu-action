@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { verifyDirectSourceMaps, verifySourceCoverage } from './verify-source-coverage.mjs';
+import { verifyDirectSourceMaps, verifyCoverageSummary } from './verify-source-coverage.mjs';
 
 const defaultRoot = fs.realpathSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
@@ -32,7 +32,8 @@ export function runCoverage({ projectRoot = defaultRoot, compile, collect } = {}
     process.execPath, 'scripts/run-tests.mjs', path.join(build, 'index.js'),
   ])))();
   const coverage = JSON.parse(fs.readFileSync(path.join(report, 'coverage-final.json'), 'utf8'));
-  const sources = verifySourceCoverage({ projectRoot: root, coverage });
+  const summary = JSON.parse(fs.readFileSync(path.join(report, 'coverage-summary.json'), 'utf8'));
+  const sources = verifyCoverageSummary({ projectRoot: root, coverage, summary });
   console.log(`Verified detailed source coverage for ${sources.join(', ')}`);
 }
 
