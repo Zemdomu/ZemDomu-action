@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const entry = path.resolve(root, process.argv[2] ?? 'dist/index.js');
 const commands = [
-  ['--experimental-strip-types', '--test', 'tests/runner.test.mjs', 'tests/fuzz-properties.test.js', 'tests/coverage-guard.test.mjs'],
+  ['--experimental-strip-types', '--test', 'tests/runner.test.mjs', 'tests/fuzz-properties.test.js', 'tests/coverage-guard.test.mjs', 'tests/action-input-output.test.mjs'],
   ['tests/run-action.test.js'],
   ['tests/multiple-h1-action.test.js'],
   ['tests/cross-component-assets-action.test.js'],

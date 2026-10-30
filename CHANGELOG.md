@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Bugfix
+
+- Bugfix: validate cross-component depth inputs as non-negative safe integers before analysis and consistently use the documented default of three when the input is omitted or empty.
+
 ### Security
 
 - Security: update the bundled engine to Core 2.0.1 to prevent crafted script URLs and component paths from causing excessive processing.
