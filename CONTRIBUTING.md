@@ -34,6 +34,27 @@ npm test
 Dependency installation runs the `prepare` build. `npm test` rebuilds the Action
 bundle before running the tests.
 
+The normal test run includes seeded fast-check properties against the real runner
+and file-discovery APIs. They check annotation escaping, output record boundaries,
+Unicode preservation, overlapping globs, and exclusion of vendor or linked
+directories. Run just these properties with `npm run test:fuzz`. Each property
+runs 250 cases by default; use a longer run and a chosen seed when investigating:
+
+```sh
+ZEMDOMU_FUZZ_RUNS=2000 ZEMDOMU_FUZZ_SEED=12345 npm run test:fuzz
+```
+
+`ZEMDOMU_FUZZ_RUNS` accepts 1–10000; `ZEMDOMU_FUZZ_SEED` accepts a signed 32-bit
+integer. A failure reports its seed, shrunk counterexample, and replay path.
+Replay that path against the named property, for example:
+
+```sh
+ZEMDOMU_FUZZ_SEED=12345 ZEMDOMU_FUZZ_PATH='0:1:2' node --experimental-strip-types --test --test-name-pattern='annotations preserve Unicode' tests/fuzz-properties.test.js
+```
+
+Use the actual seed and path from the failure. Omit `ZEMDOMU_FUZZ_PATH` for a fresh
+run, and add a focused regression test for any confirmed counterexample.
+
 Add a focused regression test under `tests/` for runner, input, file-discovery,
 annotation, or SARIF changes. Edit source under `src/`; use `npm run build` to
 regenerate the bundle when needed.
