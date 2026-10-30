@@ -33,12 +33,12 @@
     "zemdomu": "^2.0.2"
   },
   "devDependencies": {
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.6.5",
     "@vercel/ncc": "^0.45.0",
     "c8": "12.0.0",
     "fast-check": "4.10.2",
     "typescript": "^5.8.2",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "overrides": {
     "brace-expansion": "^5.0.12"
