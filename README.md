@@ -110,20 +110,23 @@ Run only on frontend folders and enable cross-component analysis:
 
 ## Local Development
 
-Reference the action by path:
+From the root of a standalone checkout of this repository, install dependencies
+and run the tests. The test command builds the Action bundle first:
 
-```yaml
-- uses: ./packages/Zemdomu-Actions
-```
-
-Build and test from the action package:
-
-```bash
-cd packages/Zemdomu-Actions
-npm install
-npm run build
+```sh
+npm ci
 npm test
 ```
+
+To use the checkout as a local Action in this repository's workflow, check it
+out before referencing its root directory:
+
+```yaml
+- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+- uses: ./
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for focused tests and contribution requirements.
 
 ## Links
 
