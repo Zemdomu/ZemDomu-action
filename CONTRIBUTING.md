@@ -73,3 +73,14 @@ Explain any checks you could not run. For a user-facing change, add an entry und
 `Feature`, or `Docs`).
 
 Follow the [Code of Conduct](CODE_OF_CONDUCT.md) in issues, discussions, and reviews.
+
+## Release security checks
+
+Before publishing a production release, run `npm ci`, `npm test`,
+`npm run audit:production`, and `npm run audit:all` on the release candidate.
+The full test suite includes the generated-input property tests. Require a
+successful CodeQL push run on public `main` for the exact source commit being
+released, and review its findings. Fix confirmed exploitable vulnerabilities of
+medium or higher severity before publishing; record evidence for false-positive
+dismissals. Include the source commit and test, fuzz, audit, and CodeQL results
+in the release pull request. Repeat these checks if the source changes.
