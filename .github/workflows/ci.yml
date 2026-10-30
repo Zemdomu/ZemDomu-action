@@ -41,3 +41,8 @@ jobs:
         run: npm test
       - name: Verify committed bundle is up to date
         run: git diff --exit-code -- dist/
+      - name: Measure direct TypeScript source coverage
+        if: matrix.node == 24
+        run: |
+          npm run test:coverage
+          git diff --exit-code -- dist/
