@@ -48,3 +48,29 @@ Replace `ARTIFACT` with the downloaded filename and `REPOSITORY` with
 workflow's identity. Signatures added to earlier releases record a later signing
 operation; they do not establish how the original artifact was built. npm
 provenance, when available, is separate build evidence.
+
+## Verify public build provenance
+
+Releases built by `.github/workflows/release-action.yml` additionally provide
+`provenance.sigstore.json` and `provenance.intoto.jsonl`. The former retains the
+original signed SLSA build statement and certificate/transparency evidence; the
+latter contains its unchanged signed DSSE envelope. These describe the public
+build that produced the exact release tarball. Their presence does not imply
+that older releases were built by that workflow.
+
+Download the tarball and provenance bundle from the same release, resolve its
+version tag to the reviewed commit, and verify using that exact commit:
+
+```bash
+cosign verify-blob-attestation \
+  --bundle provenance.sigstore.json \
+  --type slsaprovenance1 \
+  --certificate-identity https://github.com/Zemdomu/ZemDomu-action/.github/workflows/release-action.yml@refs/heads/main \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-github-workflow-sha REVIEWED_COMMIT \
+  zemdomu-action-VERSION.tgz
+```
+
+Do not disable subject, certificate or transparency-log verification. Build-only
+workflow runs retain validation artifacts and attestations without creating or
+changing a product version, tag or GitHub release.
