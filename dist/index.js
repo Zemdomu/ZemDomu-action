@@ -211247,7 +211247,14 @@ async function run() {
             }
         }
         const depthInput = core.getInput("crossComponentDepth");
-        const depth = depthInput ? parseInt(depthInput, 10) : undefined;
+        let depth = 3;
+        if (depthInput) {
+            const parsedDepth = Number(depthInput);
+            if (!/^\d+$/.test(depthInput) || !Number.isSafeInteger(parsedDepth)) {
+                throw new Error("crossComponentDepth must be a non-negative safe integer");
+            }
+            depth = parsedDepth;
+        }
         const linter = new zemdomu_1.ProjectLinter({
             crossComponentAnalysis: cross,
             crossComponentDepth: depth,
