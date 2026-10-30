@@ -1,12 +1,15 @@
 ## Unreleased
 
+## 0.3.9
+
 ### Bugfix
 
 - Bugfix: validate cross-component depth inputs as non-negative safe integers before analysis and consistently use the documented default of three when the input is omitted or empty.
+- Bugfix: include Core 2.0.2 corrections for language tags, directly referenced hidden accessible names, and inline lint-control comment boundaries.
 
 ### Security
 
-- Security: update the bundled engine to Core 2.0.1 to prevent crafted script URLs and component paths from causing excessive processing.
+- Security: update the bundled engine to Core 2.0.2 to prevent crafted script URLs and component paths from causing excessive processing.
 - Security: provide verifiable Sigstore signatures for GitHub release downloads.
 
 ### Docs

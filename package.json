@@ -1,6 +1,6 @@
 {
   "name": "zemdomu-action",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "GitHub Action that runs ZemDomu Core semantic accessibility checks and reports pull-request annotations",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "test:coverage": "node scripts/test-coverage.mjs"
   },
   "dependencies": {
-    "zemdomu": "^2.0.1"
+    "zemdomu": "^2.0.2"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
